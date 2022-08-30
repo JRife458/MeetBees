@@ -11,12 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
     }
   }
   Membership.init({
-    userId: DataTypes.INTEGER,
-    groupId: DataTypes.INTEGER,
-    status: DataTypes.ENUM('member', 'cohost', 'pending')
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: "CASCADE",
+      references: {
+        model: 'Users',
+        key: "id"
+      }
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      onDelete: "CASCADE",
+      references: {
+        model: 'Groups',
+        key: 'id'
+      }
+    },
+    status: {
+      type: DataTypes.ENUM('member', 'cohost', 'pending'),
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Membership',

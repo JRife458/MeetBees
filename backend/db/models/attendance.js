@@ -14,8 +14,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Attendance.init({
-    eventId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
+    eventId: {
+      type: DataTypes.INTEGER,
+      onDelete: "CASCADE",
+      references: {
+        model: 'Events',
+        key: "id"
+      }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      onDelete: "CASCADE",
+      references: {
+        model: 'Users',
+        key: "id"
+      }
+    },
     status: DataTypes.ENUM('member', 'waitlist', 'pending')
   }, {
     sequelize,
