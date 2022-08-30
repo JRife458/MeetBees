@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false
       },
       type: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM('Online', "In person"),
         allowNull: false
       },
       capacity: {
@@ -33,7 +33,7 @@ module.exports = {
         allowNull: false
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL,
         allowNull: false
       },
       startDate: {
@@ -46,11 +46,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

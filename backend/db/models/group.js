@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Group.belongsTo(models.Event, { foreignKey: 'groupId' })
       Group.hasMany(models.GroupImage, { foreignKey: 'groupId' })
+      Group.belongsToMany(models.User, { through: 'Memberships' })
     }
   }
   Group.init({
@@ -33,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        len: [50, Infinity]
+        len: [50, 3000]
       }
     },
     type: {

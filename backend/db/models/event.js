@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Event.belongsToMany(models.Event, { through: 'Attendance', as: 'eventId' })
+      Event.belongsToMany(models.User, { through: 'Attendance', as: 'eventId' })
       Event.hasMany(models.EventImage, { foreignKey: 'eventId' })
     }
   }
@@ -49,16 +49,25 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     price: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        min: 0.01
+      }
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAfter: new Date
+      }
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAfter: this.startDate
+      }
     },
   }, {
     sequelize,

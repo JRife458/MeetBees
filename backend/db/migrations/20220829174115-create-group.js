@@ -10,7 +10,7 @@ module.exports = {
       },
       organizerId: {
         type: Sequelize.INTEGER,
-        references: { model: 'Users' }
+        // references: { model: 'Users' }
       },
       name: {
         type: Sequelize.STRING,
@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false
       },
       type: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM('Online','In person'),
         allowNull: false
       },
       private: {
@@ -38,11 +38,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

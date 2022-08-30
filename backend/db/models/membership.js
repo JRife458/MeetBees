@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Membership.belongsTo(models.User, {foreignKey: 'userId'})
+      Membership.belongsTo(models.Group, {foreignKey: 'groupId'})
 
     }
   }
@@ -18,20 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      onDelete: "CASCADE",
-      references: {
-        model: 'Users',
-        key: "id"
-      }
+      onDelete: "CASCADE"
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      onDelete: "CASCADE",
-      references: {
-        model: 'Groups',
-        key: 'id'
-      }
+      onDelete: "CASCADE"
     },
     status: {
       type: DataTypes.ENUM('member', 'cohost', 'pending'),
