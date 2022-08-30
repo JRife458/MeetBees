@@ -1,5 +1,5 @@
 'use strict';
-const { Model, Validator } = require('sequelize');
+const { Model, Validator, BelongsToMany } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -41,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       // define association here
+      User.belongsToMany( models.Group, { through: 'Memberships' })
+      User.hasMany( models.Group, { foreignKey: 'organizerId' })
+      User.belongsToMany( models.Event, { through: 'Attendances' })
     }
   };
 
@@ -68,6 +71,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
         validate: {
           len: [3, 256],
