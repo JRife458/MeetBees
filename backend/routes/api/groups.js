@@ -29,18 +29,6 @@ const validateGroupCreate = [
   check('state')
     .exists({ checkFalsy: true })
     .withMessage('State is required'),
-  check('lat', "Latitude is not valid")
-    .exists({ checkFalsy: true })
-    .custom(value => {
-      if (value < -90 || value > 90) throw new Error("Latitude is not valid")
-    })
-    .withMessage('State is required'),
-  check('lng',"Longitude is not valid")
-    .exists({ checkFalsy: true })
-    .custom(value => {
-      if (value < -180 || value > 180) throw new Error("Longitude is not valid")
-    })
-    .withMessage('State is required'),
   handleValidationErrors
 ];
 
@@ -51,23 +39,6 @@ const validateImageCreate = [
   check('preview')
     .exists({ checkFalsy: true })
     .withMessage('Preview must be a boolean'),
-  handleValidationErrors
-]
-
-const validateVenueCreate = [
-  check('address')
-    .exists({ checkFalsy: true })
-    .withMessage('Street address is required'),
-  check('city')
-    .exists({ checkFalsy: true })
-    .withMessage('City is required'),
-  check('state')
-    .exists({ checkFalsy: true })
-    .withMessage('State is required'),
-  check('lat')
-    .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage('State is required'),
   handleValidationErrors
 ]
 
@@ -335,7 +306,6 @@ router.get('/:groupId/venues', async (req, res) => {
 
 // Add a venue to a group
 router.post('/:groupId/venues',
-  validateVenueCreate,
  async (req, res) => {
   const { user } = req
   const currentId = user.id
