@@ -74,16 +74,6 @@ const validateVenueCreate = [
 // Get all groups
 router.get('/', async (req, res) => {
   let groups = await Group.findAll({
-    include: [
-      {model: User, attributes: []}
-    ],
-    attributes:
-      {include:
-        [
-          [sequelize.fn('count', sequelize.col('User.id')), 'numMembers']
-        ]
-      },
-    group: ['Group.id'],
     raw: true
   })
 
@@ -96,10 +86,16 @@ router.get('/', async (req, res) => {
 
   // GROSS
   for (let i = 0; i < groups.length; i++) {
+    if (groups[i].private === 0) groups[i].private = false
+    if (groups[i].private === 1) groups[i].private = true
+    const {count} = await Membership.findAndCountAll({
+      where: {groupId: groups[i].id},
+      raw: true
+    })
+    groups[i].numMembers = count
     for (let j = 0; j < previews.length; j++) {
       if (previews[j].groupId === groups[i].id) {
         groups[i].previewImage = previews[j].url
-        console.log(groups[i].previewImage)
       }
     }
   }
