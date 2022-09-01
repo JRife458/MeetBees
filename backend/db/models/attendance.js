@@ -11,24 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Attendance.belongsTo(models.Event, {foreignKey: 'eventId'})
+      Attendance.belongsTo(models.User, {foreignKey: 'userId'})
     }
   }
   Attendance.init({
     eventId: {
       type: DataTypes.INTEGER,
-      onDelete: "CASCADE",
-      references: {
-        model: 'Events',
-        key: "id"
-      }
+      onDelete: "CASCADE"
     },
     userId: {
       type: DataTypes.INTEGER,
-      onDelete: "CASCADE",
-      references: {
-        model: 'Users',
-        key: "id"
-      }
+      onDelete: "CASCADE"
     },
     status: DataTypes.ENUM('member', 'waitlist', 'pending')
   }, {

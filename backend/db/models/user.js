@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     toSafeObject() {
-      const { id, username, email } = this; // context will be the User instance
-      return { id, username, email };
+      const { id, firstName, lastName, email } = this; // context will be the User instance
+      return { id, firstName, lastName, email };
     }
     validatePassword(password) {
       return bcrypt.compareSync(password, this.hashedPassword.toString());
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       // define association here
-      User.belongsToMany( models.Group, { through: 'Memberships' })
+      User.belongsToMany( models.Group, { through: 'Memberships', as: 'UserMemberships' })
       User.hasMany( models.Group, { foreignKey: 'organizerId' })
       User.belongsToMany( models.Event, { through: 'Attendances' })
     }
