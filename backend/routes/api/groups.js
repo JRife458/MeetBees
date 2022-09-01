@@ -29,6 +29,18 @@ const validateGroupCreate = [
   check('state')
     .exists({ checkFalsy: true })
     .withMessage('State is required'),
+  check('lat', "Latitude is not valid")
+    .exists({ checkFalsy: true })
+    .custom(value => {
+      if (value < -90 || value > 90) throw new Error("Latitude is not valid")
+    })
+    .withMessage('State is required'),
+  check('lng',"Longitude is not valid")
+    .exists({ checkFalsy: true })
+    .custom(value => {
+      if (value < -180 || value > 180) throw new Error("Longitude is not valid")
+    })
+    .withMessage('State is required'),
   handleValidationErrors
 ];
 
@@ -39,6 +51,23 @@ const validateImageCreate = [
   check('preview')
     .exists({ checkFalsy: true })
     .withMessage('Preview must be a boolean'),
+  handleValidationErrors
+]
+
+const validateVenueCreate = [
+  check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+  check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+  check('state')
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+  check('lat')
+    .exists({ checkFalsy: true })
+    .isDecimal()
+    .withMessage('State is required'),
   handleValidationErrors
 ]
 
@@ -146,7 +175,7 @@ router.get('/:groupId', async (req, res) => {
   })
   let venues = await Venue.findAll({
     where: {groupId: group.id},
-    exclude: ['createdAt', 'updatedAt']
+    attributes: {exclude: ['createdAt', 'updatedAt']}
   })
   group.numMembers = count
   group.GroupImages = images
@@ -296,6 +325,48 @@ router.delete('/:groupId', async (req, res) => {
     "message": "Successfully deleted",
     "statusCode": 200
   })
+})
+
+// Get all venues for group
+router.get('/:groupId/venues', async (req, res) => {
+  let venues = await Venue.findAll({
+    attributes: {exclude: ['createdAt', 'updatedAt']},
+    where: {groupId: req.params.groupId}
+  })
+
+  return res.json({Venues: venues})
+})
+
+// Add a venue to a group
+router.post('/:groupId/venues',
+  validateVenueCreate,
+ async (req, res) => {
+  const { user } = req
+  const currentId = user.id
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  if (group.organizerId !== currentId) {
+    throw new Error('Current user is not the organizer for this group')
+  }
+
+  const {address, city, state, lat, lng} = req.body
+  let newVenue = await Venue.create({
+    groupId: group.id,
+    address,
+    city,
+    state,
+    lat,
+    lng
+  })
+
+  return res.json(newVenue)
 })
 
 module.exports = router;
