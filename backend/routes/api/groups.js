@@ -79,15 +79,6 @@ router.get('/current', async (req, res) => {
   const currentId = user.id;
   console.log(user.id)
   let groups = await Group.findAll({
-    include: [
-      {model: User, attributes: [], where: {id: currentId}}
-    ],
-    attributes:
-      {include:
-        [
-          [sequelize.fn('count', sequelize.col('User.id')), 'numMembers']
-        ]
-      },
     raw: true
   })
 
@@ -100,6 +91,11 @@ router.get('/current', async (req, res) => {
 
   // GROSS
   for (let i = 0; i < groups.length; i++) {
+    const {count} = await Membership.findAndCountAll({
+      where: {groupId: groups[i].id},
+      raw: true
+    })
+    groups[i].numMembers = count
     for (let j = 0; j < previews.length; j++) {
       if (previews[j].groupId === groups[i].id) {
         groups[i].previewImage = previews[j].url
