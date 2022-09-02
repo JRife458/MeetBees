@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Group.hasMany(models.Event, { foreignKey: 'groupId' })
       Group.hasMany(models.GroupImage, {foreignKey: 'groupId' })
-      Group.belongsToMany(models.User, { through: 'Memberships', as: 'GroupMemberships' })
+      Group.belongsToMany(models.User, { through: 'Memberships', foreignKey: 'groupId' })
       Group.belongsTo(models.User, {foreignKey: 'organizerId'})
       Group.hasMany(models.Venue, {foreignKey: 'groupId'})
     }
