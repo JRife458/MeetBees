@@ -163,6 +163,7 @@ router.put('/:eventId', async (req, res) => {
   if (endDate) {
     event.endDate = endDate
   }
+  await event.save()
   return res.json(event)
 })
 

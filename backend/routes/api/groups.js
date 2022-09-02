@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Group, sequelize, GroupImage, Venue, Membership, Event, Attendance, EventImage } = require('../../db/models');
+const { User, Group, sequelize, GroupImage, Venue, Membership, Event, Attendance, EventImage, GroupMembers } = require('../../db/models');
 const { Op } = require('sequelize')
 
 const { check } = require('express-validator');
@@ -96,6 +96,8 @@ router.get('/current', async (req, res) => {
       raw: true
     })
     groups[i].numMembers = count
+    if (groups[i].private === 1) groups[i].private = true
+    else if (groups[i].private === 0) groups[i].private = false
     for (let j = 0; j < previews.length; j++) {
       if (previews[j].groupId === groups[i].id) {
         groups[i].previewImage = previews[j].url
@@ -119,6 +121,8 @@ router.get('/:groupId', async (req, res) => {
     return res.json(error)
   }
 
+  if (group.private === 1) group.private = true
+  else if (group.private === 0) group.private = false
   const {count} = await Membership.findAndCountAll({
     where: {groupId: group.id},
     raw: true
@@ -261,6 +265,7 @@ router.put('/:groupId', async (req, res) => {
       return res.json(errorRes)
     } else group.state = state
   }
+  await group.save()
   return res.json({Group: group})
 })
 
@@ -427,7 +432,7 @@ router.get('/:groupId/members', async (req, res) => {
   }
   const members = await User.findAll({
     attributes: ['id', 'firstName', 'lastName'],
-    include: {model: Group, where: {id: req.params.groupId}, attributes: []},
+    include: {model: Group, as: 'UserMembers', where: {id: req.params.groupId}, attributes: []},
     raw: true
   })
   for (let i = 0; i < members.length; i++) {
@@ -449,6 +454,17 @@ router.post('/:groupId/membership', async (req, res) => {
     const error = {
       "message": "Group couldn't be found",
       "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const exists = await Membership.findAll({
+    where: {userId: req.user.id, groupId: group.id}
+  })
+  if (exists.length) {
+    res.status(400)
+    const error = {
+      "message": "Membership has already been requested",
+      "statusCode": 400
     }
     return res.json(error)
   }
@@ -484,11 +500,10 @@ router.put('/:groupId/membership', async (req, res) => {
     }
     return res.json(error)
   }
-  const membership = await Membership.findAll({
-    where: {userId: req.body.memberId, groupId: group.id},
-    raw: true
+  const membership = await Membership.findOne({
+    where: {userId: req.body.memberId, groupId: group.id}
   })
-  if (!membership.length) {
+  if (!membership) {
     res.status(404)
     const error = {
       "message": "Membership between the user and the group does not exits",
@@ -496,13 +511,15 @@ router.put('/:groupId/membership', async (req, res) => {
     }
     return res.json(error)
   }
+
   membership.status = 'member'
 
+  await membership.save()
   return res.json({
   "id": membership.id,
   "groupId": membership.groupId,
   "memberId": membership.userId,
-  "status": "member"
+  "status": membership.status
   })
 })
 
@@ -542,5 +559,7 @@ router.delete('/:groupId/membership', async (req, res) => {
     "message": "Successfully deleted membership from group"
   })
 })
+
+
 
 module.exports = router;
