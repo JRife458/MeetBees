@@ -414,4 +414,133 @@ router.post('/:groupId/events', async (req, res) => {
   return res.json(newEvent)
 })
 
+//Get members of group
+router.get('/:groupId/members', async (req, res) => {
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const members = await User.findAll({
+    attributes: ['id', 'firstName', 'lastName'],
+    include: {model: Group, where: {id: req.params.groupId}, attributes: []},
+    raw: true
+  })
+  for (let i = 0; i < members.length; i++) {
+    let status = await Membership.findAll({
+      where: {userId: members[i].id},
+      attributes: ['status'],
+      raw: true
+    })
+    members[i].Membership = status[0]
+  }
+  return res.json(members)
+})
+
+// Request Membership of group
+router.post('/:groupId/membership', async (req, res) => {
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  let membership = await Membership.create({
+    userId: req.user.id,
+    groupId: group.id,
+    status: 'pending'
+  })
+  return res.json({
+    'groupId': group.id,
+    'memberId': membership.userId,
+    'status': membership.status
+  })
+})
+
+// Change Membership Status
+router.put('/:groupId/membership', async (req, res) => {
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const user = await User.findByPk(req.body.memberId)
+  if (!user) {
+    res.status(404)
+    const error = {
+      "message": "User couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const membership = await Membership.findAll({
+    where: {userId: req.body.memberId, groupId: group.id},
+    raw: true
+  })
+  if (!membership.length) {
+    res.status(404)
+    const error = {
+      "message": "Membership between the user and the group does not exits",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  membership.status = 'member'
+
+  return res.json({
+  "id": membership.id,
+  "groupId": membership.groupId,
+  "memberId": membership.userId,
+  "status": "member"
+  })
+})
+
+//Delete Membership
+router.delete('/:groupId/membership', async (req, res) => {
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const user = await User.findByPk(req.body.memberId)
+  if (!user) {
+    res.status(404)
+    const error = {
+      "message": "User couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  let membership = await Membership.findOne({
+    where: {userId: req.body.memberId, groupId: group.id}
+  })
+  if (!membership) {
+    res.status(404)
+    const error = {
+      "message": "Membership does not exist for this User",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  await membership.destroy()
+  return res.json({
+    "message": "Successfully deleted membership from group"
+  })
+})
+
 module.exports = router;
