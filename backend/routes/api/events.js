@@ -15,7 +15,6 @@ router.get('/', async (req, res) => {
 
   let previews = await EventImage.findAll({
     where: {preview: true},
-    attributes: ['eventId', 'url'],
     raw: true
   })
 
