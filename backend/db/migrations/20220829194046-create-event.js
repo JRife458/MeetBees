@@ -10,11 +10,12 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        onDelete: 'CASCADE'
       },
       groupId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING,

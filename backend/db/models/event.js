@@ -18,9 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Event.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       onDelete: 'CASCADE'
     },
     groupId: {
@@ -54,16 +58,16 @@ module.exports = (sequelize, DataTypes) => {
     startDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      validate: {
-        isAfter: new Date
-      }
+      // validate: {
+      //   isAfter: new Date
+      // }
     },
     endDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      validate: {
-        isAfter: this.startDate
-      }
+      // validate: {
+      //   isAfter: this.startDate
+      // }
     },
   }, {
     sequelize,

@@ -10,10 +10,7 @@ module.exports = {
       },
       eventId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Events'
-        }
+        type: Sequelize.INTEGER
       },
       url: {
         allowNull: false,

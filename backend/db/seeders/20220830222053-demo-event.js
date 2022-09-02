@@ -13,7 +13,7 @@ module.exports = {
     */
      await queryInterface.bulkInsert('Events', [
       {
-        venueId: 1,
+        venueId: null,
         groupId: 1,
         name: 'Demo Event 1',
         description: 'Demo Description',
@@ -28,7 +28,7 @@ module.exports = {
         groupId: 2,
         name: 'Demo Event 2',
         description: 'Demo Description',
-        type: 'Online',
+        type: 'In Person',
         capacity: 200,
         price: 5.99,
         startDate: '05/12/2023',
@@ -39,7 +39,7 @@ module.exports = {
         groupId: 3,
         name: 'Demo Event 3',
         description: 'Demo Description',
-        type: 'Online',
+        type: 'In Person',
         capacity: 200,
         price: 5.99,
         startDate: '05/12/2023',

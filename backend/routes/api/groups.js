@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Group, sequelize, GroupImage, Venue, Membership } = require('../../db/models');
+const { User, Group, sequelize, GroupImage, Venue, Membership, Event, Attendance, EventImage } = require('../../db/models');
 const { Op } = require('sequelize')
 
 const { check } = require('express-validator');
@@ -71,9 +71,7 @@ router.get('/', async (req, res) => {
     }
   }
   return res.json({ Groups: groups})
-  }
-
-);
+});
 
 // Get Group from current user
 router.get('/current', async (req, res) => {
@@ -105,7 +103,6 @@ router.get('/current', async (req, res) => {
     for (let j = 0; j < previews.length; j++) {
       if (previews[j].groupId === groups[i].id) {
         groups[i].previewImage = previews[j].url
-        console.log(groups[i].previewImage)
       }
     }
   }
@@ -333,6 +330,92 @@ router.post('/:groupId/venues',
   })
 
   return res.json(newVenue)
+})
+
+// Get all events for group
+router.get('/:groupId/events', async (req, res) => {
+  let events = await Event.findAll({
+    where: {groupId: req.params.groupId},
+    raw: true
+  })
+
+  let previews = await EventImage.findAll({
+    where: {preview: true},
+    attributes: ['eventId', 'url'],
+    raw: true
+  })
+
+  let group = await Group.findByPk(req.params.groupId, {
+    attributes: ['id', 'name', 'city', 'state'],
+    raw: true
+  })
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+
+  let venues = await Venue.findAll({
+    attributes: ['id', 'city', 'state'],
+    raw: true
+  })
+
+  for (let i = 0; i < events.length; i++) {
+    const {count} = await Attendance.findAndCountAll({
+      where: {eventId: events[i].id},
+      raw: true
+    })
+    events[i].numAttending = count
+    for (let j = 0; j < previews.length; j++) {
+      if (previews[j].eventId === events[i].id) {
+        events[i].previewImage = previews[j].url
+      }
+    }
+    events[i].Group = group
+    for (let j = 0; j < venues.length; j++) {
+      if (events[i].venueId === venues[j].id) {
+        events[i].Venue = venues[j]
+      }
+    }
+    if (events[i].type === 'Online') {
+      events[i].Venue = null
+    }
+  }
+  return res.json({Events: events})
+})
+
+// Create an Event for Group by Id
+router.post('/:groupId/events', async (req, res) => {
+  const { user } = req
+  const currentId = user.id
+  const group = await Group.findByPk(req.params.groupId)
+  if (!group) {
+    res.status(404)
+    const error = {
+      "message": "Group couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  if (group.organizerId !== currentId) {
+    throw new Error('Current user is not the organizer for this group')
+  }
+  const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body
+  let newEvent = await Event.create({
+    groupId: group.id,
+    venueId,
+    name,
+    type,
+    capacity,
+    price,
+    description,
+    startDate,
+    endDate
+  })
+  return res.json(newEvent)
 })
 
 module.exports = router;

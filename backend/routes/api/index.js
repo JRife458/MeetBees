@@ -3,7 +3,8 @@ const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const { restoreUser } = require("../../utils/auth.js");
 const groupsRouter = require('./groups.js')
-const venueRouter = require('./venues')
+const venuesRouter = require('./venues.js')
+const eventsRouter = require('./events.js')
 
 // Connect restoreUser middleware to the API router
   // If current user session is valid, set req.user to the user in the database
@@ -15,8 +16,8 @@ router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 
 router.use('/groups', groupsRouter);
-
-router.use('/venues', venueRouter)
+router.use('/venues', venuesRouter);
+router.use('/events', eventsRouter);
 
 router.post('/test', (req, res) => {
   res.json({ requestBody: req.body });
