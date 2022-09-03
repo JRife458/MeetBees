@@ -4,6 +4,7 @@ const { Op } = require('sequelize')
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const membership = require('../../db/models/membership');
 
 const router = express.Router();
 
@@ -90,6 +91,8 @@ router.get('/:eventId', async (req, res) => {
 
   return res.json(event)
 })
+
+
 
 //Add an Image to an Event
 router.post('/:eventId/images', async (req, res) => {
@@ -178,12 +181,126 @@ router.delete('/:eventId', async (req, res) => {
     }
     return res.json(error)
   }
-  console.log(event)
   await event.destroy()
   return res.json({
     "message": "Successfully deleted",
     "statusCode": 200
   })
 })
+
+//Get all Attendees of an Event
+router.get('/:eventId/attendees', async (req, res) => {
+  const event = await Event.findByPk(req.params.eventId)
+  if (!event) {
+    res.status(404)
+    const error = {
+      "message": "Event couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const users = await User.findAll({
+    attributes: ['id', 'firstName', 'lastName'],
+    include: {model: Attendance,
+    as: 'Attendees',
+    where: {eventId: req.params.eventId},
+    attributes: ['status']
+  }
+  })
+  return res.json(users)
+})
+
+// Request to attend an event
+router.post('/:eventId/attendance', async (req, res) => {
+  const event = await Event.findByPk(req.params.eventId)
+  if (!event) {
+    res.status(404)
+    const error = {
+      "message": "Event couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const exists = await Attendance.findAll({
+    where: {userId: req.user.id, eventId: event.id}
+  })
+  if (exists.length) {
+    res.status(400)
+    const error = {
+      "message": "Attendance has already been requested",
+      "statusCode": 400
+    }
+    return res.json(error)
+  }
+  await Attendance.create({
+    userId: req.user.id,
+    eventId: event.id,
+    status: 'pending'
+  })
+  return res.json({
+    "eventId": event.id,
+    "userId": req.user.id,
+    "status": "pending"
+  })
+})
+
+// Change status of Attendance
+router.put('/:eventId/attendance', async (req, res) => {
+  const event = await Event.findByPk(req.params.eventId)
+  if (!event) {
+    res.status(404)
+    const error = {
+      "message": "Event couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const attendance = await Attendance.findOne({
+    attributes: ['id', 'eventId', 'userId', 'status'],
+    where: {userId: req.body.userId, eventId: req.params.eventId}
+  })
+  if (!attendance) {
+    res.status(404)
+    const error = {
+      "message": "Attendance between the user and the event does not exist",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  attendance.status = req.body.status
+  await attendance.save()
+
+  return res.json(attendance)
+})
+
+// Delete an attendance
+router.delete('/:eventId/attendance', async (req, res) => {
+  const event = await Event.findByPk(req.params.eventId)
+  if (!event) {
+    res.status(404)
+    const error = {
+      "message": "Event couldn't be found",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  const attendance = await Attendance.findOne({
+    attributes: ['id', 'eventId', 'userId', 'status'],
+    where: {userId: req.body.userId, eventId: req.params.eventId}
+  })
+  if (!attendance) {
+    res.status(404)
+    const error = {
+      "message": "Attendance between the user and the event does not exist",
+      "statusCode": 404
+    }
+    return res.json(error)
+  }
+  await attendance.destroy()
+  return res.json({
+    "message": "Successfully deleted attendance from event"
+  })
+})
+
 
 module.exports = router;

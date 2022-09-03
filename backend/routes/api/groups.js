@@ -9,64 +9,64 @@ const router = express.Router();
 
 const validateGroupCreate = [
   check('name')
-    .exists({ checkFalsy: true })
-    .isLength({ max: 60 })
-    .withMessage('Name must be 60 characters or less'),
+  .exists({ checkFalsy: true })
+  .isLength({ max: 60 })
+  .withMessage('Name must be 60 characters or less'),
   check('about')
     .exists({ checkFalsy: true })
     .isLength({ min: 50 })
     .withMessage('About must be 50 characters or more'),
-  check('type')
+    check('type')
     .exists({ checkFalsy: true })
     .isIn(['Online', "In person"])
     .withMessage("Type must be 'Online' or 'In person'"),
-  check('private')
+    check('private')
     .isBoolean()
     .withMessage('Private must be a boolean'),
-  check('city')
+    check('city')
     .exists({ checkFalsy: true })
     .withMessage('City is required'),
-  check('state')
+    check('state')
     .exists({ checkFalsy: true })
     .withMessage('State is required'),
-  handleValidationErrors
-];
+    handleValidationErrors
+  ];
 
-const validateImageCreate = [
-  check('url')
+  const validateImageCreate = [
+    check('url')
     .exists({ checkFalsy: true })
     .withMessage('Must provide a url'),
-  check('preview')
+    check('preview')
     .exists({ checkFalsy: true })
     .withMessage('Preview must be a boolean'),
-  handleValidationErrors
-]
+    handleValidationErrors
+  ]
 
-// Get all groups
-router.get('/', async (req, res) => {
-  let groups = await Group.findAll({
-    raw: true
-  })
-
-  let previews = await GroupImage.findAll({
-    where: {preview: true},
-    attributes: ['groupId', 'url'],
-    raw: true
-  })
-
-
-  // GROSS
-  for (let i = 0; i < groups.length; i++) {
-    if (groups[i].private === 0) groups[i].private = false
-    if (groups[i].private === 1) groups[i].private = true
-    const {count} = await Membership.findAndCountAll({
-      where: {groupId: groups[i].id},
+  // Get all groups
+  router.get('/', async (req, res) => {
+    let groups = await Group.findAll({
       raw: true
     })
-    groups[i].numMembers = count
-    for (let j = 0; j < previews.length; j++) {
-      if (previews[j].groupId === groups[i].id) {
-        groups[i].previewImage = previews[j].url
+
+    let previews = await GroupImage.findAll({
+      where: {preview: true},
+      attributes: ['groupId', 'url'],
+      raw: true
+    })
+
+
+    // GROSS
+    for (let i = 0; i < groups.length; i++) {
+      if (groups[i].private === 0) groups[i].private = false
+      if (groups[i].private === 1) groups[i].private = true
+      const {count} = await Membership.findAndCountAll({
+        where: {groupId: groups[i].id},
+        raw: true
+      })
+      groups[i].numMembers = count
+      for (let j = 0; j < previews.length; j++) {
+        if (previews[j].groupId === groups[i].id) {
+          groups[i].previewImage = previews[j].url
       }
     }
   }
@@ -77,34 +77,35 @@ router.get('/', async (req, res) => {
 router.get('/current', async (req, res) => {
   const { user } = req;
   const currentId = user.id;
-  console.log(user.id)
-  let groups = await Group.findAll({
-    raw: true
-  })
 
-  let previews = await GroupImage.findAll({
-    where: {preview: true},
-    attributes: ['groupId', 'url'],
-    raw: true
+  let Groups = []
+
+  let memberships = await Membership.findAll({
+    where: {userId: currentId}
   })
 
 
-  // GROSS
-  for (let i = 0; i < groups.length; i++) {
+  for (let i = 0; i < memberships.length; i++) {
+    let groupId = memberships[i].groupId
+    let group = await Group.findByPk(groupId, {raw: true})
+
     const {count} = await Membership.findAndCountAll({
-      where: {groupId: groups[i].id},
+      where: {groupId: groupId},
       raw: true
     })
-    groups[i].numMembers = count
-    if (groups[i].private === 1) groups[i].private = true
-    else if (groups[i].private === 0) groups[i].private = false
-    for (let j = 0; j < previews.length; j++) {
-      if (previews[j].groupId === groups[i].id) {
-        groups[i].previewImage = previews[j].url
-      }
-    }
+    group.numMembers = count
+
+    if (group.private === 1) group.private = true
+    else if (group.private === 0) group.private = false
+
+    const image = await GroupImage.findOne({
+      where: {groupId: group.id, preview: true},
+    })
+
+    group.previewImage = image.url
+    Groups.push(group)
   }
-  return res.json({ Groups: groups})
+  return res.json({Groups})
 });
 
 //Get Group details by id
@@ -150,8 +151,8 @@ router.get('/:groupId', async (req, res) => {
 
 // Create Group
 router.post('/',
-  validateGroupCreate,
-  async (req, res) => {
+validateGroupCreate,
+async (req, res) => {
   const { user } = req;
   const currentId = user.id;
   const { name, about, type, private, city, state } = req.body
@@ -432,17 +433,12 @@ router.get('/:groupId/members', async (req, res) => {
   }
   const members = await User.findAll({
     attributes: ['id', 'firstName', 'lastName'],
-    include: {model: Group, as: 'UserMembers', where: {id: req.params.groupId}, attributes: []},
-    raw: true
+    include: {model: Membership,
+      as: 'Membership',
+      where: {groupId: req.params.groupId},
+      attributes: ['status']
+    }
   })
-  for (let i = 0; i < members.length; i++) {
-    let status = await Membership.findAll({
-      where: {userId: members[i].id},
-      attributes: ['status'],
-      raw: true
-    })
-    members[i].Membership = status[0]
-  }
   return res.json(members)
 })
 
@@ -516,10 +512,10 @@ router.put('/:groupId/membership', async (req, res) => {
 
   await membership.save()
   return res.json({
-  "id": membership.id,
-  "groupId": membership.groupId,
-  "memberId": membership.userId,
-  "status": membership.status
+    "id": membership.id,
+    "groupId": membership.groupId,
+    "memberId": membership.userId,
+    "status": membership.status
   })
 })
 

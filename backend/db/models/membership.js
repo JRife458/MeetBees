@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Membership.belongsTo(models.User, {foreignKey: 'userId'})
       Membership.belongsTo(models.Group, {foreignKey: 'groupId'})
+      Membership.belongsTo(models.User, {foreignKey: 'userId', as: 'UserMembership'})
 
     }
   }

@@ -44,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsToMany( models.Group, { through: 'Memberships', foreignKey: 'userId', as: 'UserMembers' })
       User.hasMany( models.Group, { foreignKey: 'organizerId' })
       User.belongsToMany( models.Event, { through: 'Attendance', foreignKey: 'userId' })
+      User.hasMany( models.Attendance, {foreignKey: 'userId', as: 'Attendees' })
+      User.hasMany( models.Membership, {foreignKey: 'userId', as: 'Membership'})
     }
   };
 
