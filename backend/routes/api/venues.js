@@ -40,6 +40,7 @@ router.put('/:venueId', async (req, res) => {
   if (lng !== undefined) {
     venue.lng = lng
   }
+  await venue.save()
   return res.json(venue)
 })
 

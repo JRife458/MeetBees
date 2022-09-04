@@ -8,6 +8,22 @@ const membership = require('../../db/models/membership');
 
 const router = express.Router();
 
+// Errors
+const noEventErr = new Error("Event couldn't be found")
+noEventErr.title = ("Event couldn't be found")
+noEventErr.status = 404
+noEventErr.errors = ['No events with provided id']
+
+const noVenueErr = new Error("Venue couldn't be found")
+noVenueErr.title = ("Venue couldn't be found")
+noVenueErr.status = 404
+noVenueErr.errors = ['No venues with provided id']
+
+const noAttendanceErr = new Error("Event couldn't be found")
+noEventErr.title = ("Attendance couldn't be found")
+noEventErr.status = 404
+noEventErr.errors = ["Attendance between the user and the event does not exist"]
+
 // Get all Events
 router.get('/', async (req, res) => {
   let events = await Event.findAll({
@@ -58,16 +74,9 @@ router.get('/', async (req, res) => {
 })
 
 // Get event by Id
-router.get('/:eventId', async (req, res) => {
+router.get('/:eventId', async (req, res, next) => {
   let event = await Event.findByPk(req.params.eventId, {raw: true})
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const {count} = await Attendance.findAndCountAll({
     where: {eventId: event.id},
     raw: true
@@ -95,16 +104,9 @@ router.get('/:eventId', async (req, res) => {
 
 
 //Add an Image to an Event
-router.post('/:eventId/images', async (req, res) => {
+router.post('/:eventId/images', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const {url, preview} = req.body
   const newImage = await EventImage.create({
     eventId: event.id,
@@ -119,31 +121,18 @@ router.post('/:eventId/images', async (req, res) => {
 })
 
 // Edit an Event by Id
-router.put('/:eventId', async (req, res) => {
+router.put('/:eventId', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId, {
     attributes: {exclude: ['createdAt', 'updatedAt']}
   })
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const {venueId, name, type, capacity, price, description, startDate, endDate} = req.body
 
 
   if (venueId) {
     let venue = await Venue.findByPk(venueId)
-    if (!venue) {
-      res.status(404)
-    const error = {
-      "message": "Venue couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-    } else event.venueId = venueId
+    if (!venue) return next(noVenueErr)
+    else event.venueId = venueId
   }
   if (name) {
     event.name = name
@@ -171,16 +160,10 @@ router.put('/:eventId', async (req, res) => {
 })
 
 //Delete an Event
-router.delete('/:eventId', async (req, res) => {
+router.delete('/:eventId', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
+
   await event.destroy()
   return res.json({
     "message": "Successfully deleted",
@@ -189,16 +172,9 @@ router.delete('/:eventId', async (req, res) => {
 })
 
 //Get all Attendees of an Event
-router.get('/:eventId/attendees', async (req, res) => {
+router.get('/:eventId/attendees', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const users = await User.findAll({
     attributes: ['id', 'firstName', 'lastName'],
     include: {model: Attendance,
@@ -211,16 +187,9 @@ router.get('/:eventId/attendees', async (req, res) => {
 })
 
 // Request to attend an event
-router.post('/:eventId/attendance', async (req, res) => {
+router.post('/:eventId/attendance', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const exists = await Attendance.findAll({
     where: {userId: req.user.id, eventId: event.id}
   })
@@ -245,28 +214,16 @@ router.post('/:eventId/attendance', async (req, res) => {
 })
 
 // Change status of Attendance
-router.put('/:eventId/attendance', async (req, res) => {
+router.put('/:eventId/attendance', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
+
   const attendance = await Attendance.findOne({
     attributes: ['id', 'eventId', 'userId', 'status'],
     where: {userId: req.body.userId, eventId: req.params.eventId}
   })
-  if (!attendance) {
-    res.status(404)
-    const error = {
-      "message": "Attendance between the user and the event does not exist",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!attendance) return next(noAttendanceErr)
+
   attendance.status = req.body.status
   await attendance.save()
 
@@ -274,28 +231,15 @@ router.put('/:eventId/attendance', async (req, res) => {
 })
 
 // Delete an attendance
-router.delete('/:eventId/attendance', async (req, res) => {
+router.delete('/:eventId/attendance', async (req, res, next) => {
   const event = await Event.findByPk(req.params.eventId)
-  if (!event) {
-    res.status(404)
-    const error = {
-      "message": "Event couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!event) return next(noEventErr)
   const attendance = await Attendance.findOne({
     attributes: ['id', 'eventId', 'userId', 'status'],
     where: {userId: req.body.userId, eventId: req.params.eventId}
   })
-  if (!attendance) {
-    res.status(404)
-    const error = {
-      "message": "Attendance between the user and the event does not exist",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!attendance) return next(noAttendanceErr)
+
   await attendance.destroy()
   return res.json({
     "message": "Successfully deleted attendance from event"

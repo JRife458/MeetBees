@@ -42,6 +42,12 @@ const validateGroupCreate = [
     handleValidationErrors
   ]
 
+  //Errors
+  const noGroupErr = new Error("Group couldn't be found")
+  noGroupErr.title = ("Group couldn't be found")
+  noGroupErr.status = 404
+  noGroupErr.errors = ['No Groups with provided id']
+
   // Get all groups
   router.get('/', async (req, res) => {
     let groups = await Group.findAll({
@@ -109,18 +115,11 @@ router.get('/current', async (req, res) => {
 });
 
 //Get Group details by id
-router.get('/:groupId', async (req, res) => {
+router.get('/:groupId', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId, {
     raw: true
   })
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
 
   if (group.private === 1) group.private = true
   else if (group.private === 0) group.private = false
@@ -176,18 +175,11 @@ async (req, res) => {
 // Create image for group
 router.post('/:groupId/images',
 validateImageCreate,
-async (req, res) => {
+async (req, res, next) => {
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   if (group.organizerId !== currentId) {
     throw new Error('Current user is not the organizer for this group')
   }
@@ -203,19 +195,12 @@ async (req, res) => {
 })
 
 // Edit a group
-router.put('/:groupId', async (req, res) => {
+router.put('/:groupId', async (req, res, next) => {
   const { name, about, type, private, city, state } = req.body
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   if (group.organizerId !== currentId) {
     throw new Error('Current user is not the organizer for this group')
   }
@@ -271,18 +256,11 @@ router.put('/:groupId', async (req, res) => {
 })
 
 // Delete a Group
-router.delete('/:groupId', async (req, res) => {
+router.delete('/:groupId', async (req, res, next) => {
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   if (group.organizerId !== currentId) {
     throw new Error('Current user is not the organizer for this group')
   }
@@ -305,18 +283,11 @@ router.get('/:groupId/venues', async (req, res) => {
 
 // Add a venue to a group
 router.post('/:groupId/venues',
- async (req, res) => {
+ async (req, res, next) => {
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   if (group.organizerId !== currentId) {
     throw new Error('Current user is not the organizer for this group')
   }
@@ -335,7 +306,7 @@ router.post('/:groupId/venues',
 })
 
 // Get all events for group
-router.get('/:groupId/events', async (req, res) => {
+router.get('/:groupId/events', async (req, res, next) => {
   let events = await Event.findAll({
     where: {groupId: req.params.groupId},
     raw: true
@@ -351,14 +322,7 @@ router.get('/:groupId/events', async (req, res) => {
     attributes: ['id', 'name', 'city', 'state'],
     raw: true
   })
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
 
   let venues = await Venue.findAll({
     attributes: ['id', 'city', 'state'],
@@ -390,18 +354,11 @@ router.get('/:groupId/events', async (req, res) => {
 })
 
 // Create an Event for Group by Id
-router.post('/:groupId/events', async (req, res) => {
+router.post('/:groupId/events', async (req, res, next) => {
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   if (group.organizerId !== currentId) {
     throw new Error('Current user is not the organizer for this group')
   }
@@ -421,16 +378,9 @@ router.post('/:groupId/events', async (req, res) => {
 })
 
 //Get members of group
-router.get('/:groupId/members', async (req, res) => {
+router.get('/:groupId/members', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   const members = await User.findAll({
     attributes: ['id', 'firstName', 'lastName'],
     include: {model: Membership,
@@ -443,16 +393,9 @@ router.get('/:groupId/members', async (req, res) => {
 })
 
 // Request Membership of group
-router.post('/:groupId/membership', async (req, res) => {
+router.post('/:groupId/membership', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   const exists = await Membership.findAll({
     where: {userId: req.user.id, groupId: group.id}
   })
@@ -477,16 +420,9 @@ router.post('/:groupId/membership', async (req, res) => {
 })
 
 // Change Membership Status
-router.put('/:groupId/membership', async (req, res) => {
+router.put('/:groupId/membership', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   const user = await User.findByPk(req.body.memberId)
   if (!user) {
     res.status(404)
@@ -520,16 +456,9 @@ router.put('/:groupId/membership', async (req, res) => {
 })
 
 //Delete Membership
-router.delete('/:groupId/membership', async (req, res) => {
+router.delete('/:groupId/membership', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId)
-  if (!group) {
-    res.status(404)
-    const error = {
-      "message": "Group couldn't be found",
-      "statusCode": 404
-    }
-    return res.json(error)
-  }
+  if (!group) return next(noGroupErr)
   const user = await User.findByPk(req.body.memberId)
   if (!user) {
     res.status(404)
