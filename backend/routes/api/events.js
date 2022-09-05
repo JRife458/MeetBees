@@ -19,10 +19,10 @@ noVenueErr.title = ("Venue couldn't be found")
 noVenueErr.status = 404
 noVenueErr.errors = ['No venues with provided id']
 
-const noAttendanceErr = new Error("Event couldn't be found")
-noEventErr.title = ("Attendance couldn't be found")
-noEventErr.status = 404
-noEventErr.errors = ["Attendance between the user and the event does not exist"]
+const noAttendanceErr = new Error("Attendance couldn't be found")
+noAttendanceErr.title = ("Attendance couldn't be found")
+noAttendanceErr.status = 404
+noAttendanceErr.errors = ["Attendance between the user and the event does not exist"]
 
 // Get all Events
 router.get('/', async (req, res) => {

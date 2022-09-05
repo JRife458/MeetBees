@@ -42,7 +42,7 @@ router.post(
   async (req, res, next) => {
     const { email, firstName, lastName, password, username } = req.body;
     if (await User.findOne({where: {email: email}})) {
-      const err = new Error("User already exists");
+      const err = new Error("User with that email already exists");
       err.status = 403;
       err.title = 'Sign up failed';
       err.errors = ['The provided credentials were invalid.'];
