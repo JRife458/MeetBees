@@ -15,6 +15,7 @@ router.put('/:venueId', async (req, res) => {
       exclude: ['createdAt', 'updatedAt']
     }
   })
+  console.log(venue)
   if (!venue) {
     res.status(404)
     const error = {
@@ -41,6 +42,7 @@ router.put('/:venueId', async (req, res) => {
     venue.lng = lng
   }
   await venue.save()
+  console.log(venue)
   return res.json(venue)
 })
 
