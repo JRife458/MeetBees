@@ -26,5 +26,6 @@
   "bugs": {
     "url": "https://github.com/Mancussion/API-project/issues"
   },
-  "homepage": "https://github.com/Mancussion/API-project#readme"
+  "homepage": "https://github.com/Mancussion/API-project#readme",
+  "proxy": "http://localhost:8000"
 }
