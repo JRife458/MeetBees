@@ -1,29 +1,10 @@
 .navigation {
   display: flex;
   justify-content: space-between;
-  border: rgba(0, 0, 0, 0.200) solid 1px;
-}
-
-.nav-links {
-  border: rgba(0, 0, 0, 0.200) solid 1px;
-}
-
-.profile {
-  display: flex;
-  flex-direction: column;
-  justify-content: right;
+  align-items: center;
 }
 
 .profile-dropdown {
-  /* margin-left: 30%;
-  display: flex;
-  flex-direction: column;
-  border: rgba(0, 0, 0, 0.200) solid 1px;
-  border-radius: 4%;
-  padding-left: 5%;
-  padding-top: 5%;
-  padding-bottom: 5%; */
-  margin-top: 10%;
   position: absolute;
   min-width: 200px;
   border: rgba(0, 0, 0, 0.2) solid 1px;
@@ -39,6 +20,13 @@
 }
 .logoM {
   width: 25%;
+}
+
+.drop-button {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-right: 20%;
 }
 
 .dropdown-element {
