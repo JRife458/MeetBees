@@ -4,6 +4,8 @@ MeetBees is a bee themed website clone of Meetup. MeetBees can be used for meeti
 
 Live site: [MeetBees](https://meet-bees.herokuapp.com/)
 
+Wiki: [Link](https://github.com/Mancussion/API-project/wiki)
+
 ## Tech Stack
 
 ### Frameworks, Platforms, and Libraries:
