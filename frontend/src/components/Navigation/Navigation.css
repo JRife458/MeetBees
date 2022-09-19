@@ -1,7 +1,22 @@
 .navigation {
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
 }
 
 .nav-links {
   margin: 5px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+}
+
+/* .profile-button {
+} */
+
+.profile-dropdown {
+  display: flex;
+  flex-direction: column;
 }

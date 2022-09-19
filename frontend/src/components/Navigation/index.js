@@ -20,8 +20,6 @@ function Navigation({ isLoaded }){
       <>
         <div className='nav-links'>
           <LoginFormModal />
-        </div>
-        <div className='nav-links'>
           <NavLink to="/signup">Sign Up</NavLink>
         </div>
       </>
@@ -32,9 +30,11 @@ function Navigation({ isLoaded }){
     <ul>
       <li className='navigation'>
         <div className='nav-links'>
-        <NavLink exact to="/">Home</NavLink>
+        <NavLink exact to="/">MeetBees</NavLink>
         </div>
+        <div>
         {isLoaded && sessionLinks}
+        </div>
       </li>
     </ul>
   );
