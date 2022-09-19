@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
+import logoM from '../../assets/meetup-logo-m.png'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -32,17 +33,19 @@ function ProfileButton({ user }) {
   return (
     <>
     <div className="profile">
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle fa-lg profile-button" />
-      </button>
+      <div onClick={openMenu} className='drop-button'>
+        <img src={logoM} className='logoM'/>
+        {!showMenu && <i className="fa fa-angle-down" aria-hidden="true"></i>}
+        {showMenu && <i className="fa fa-angle-up" aria-hidden="true"></i>}
+      </div>
       {showMenu && (
-        <ul className="profile-dropdown">
-          <li>Hello {user.firstName}</li>
-          <li>{user.email}</li>
-          <li>
+        <div className="profile-dropdown">
+          <div className='dropdown-element'>Hello {user.firstName}</div>
+          <div className='dropdown-element'>{user.email}</div>
+          <div className='dropdown-element'>
             <button onClick={logout}>Log Out</button>
-          </li>
-        </ul>
+          </div>
+        </div>
       )}
     </div>
     </>
