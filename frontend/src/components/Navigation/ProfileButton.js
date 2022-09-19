@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
-import logoM from '../../assets/meetup-logo-m.png'
+import logoM from '../../assets/meetbees.png'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();

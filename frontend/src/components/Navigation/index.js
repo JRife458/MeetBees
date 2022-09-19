@@ -34,6 +34,11 @@ function Navigation({ isLoaded }){
           <img src={logo} className='logo' />
         </NavLink>
         </div>
+        <div className='nav-links'>
+        <NavLink exact to='/groups'>
+          <h2>Groups</h2>
+        </NavLink>
+        </div>
         <div>
         {isLoaded && sessionLinks}
         </div>
