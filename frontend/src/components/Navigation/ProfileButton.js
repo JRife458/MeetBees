@@ -31,8 +31,7 @@ function ProfileButton({ user }) {
   };
 
   return (
-    <>
-    <div className="profile">
+    <div className="banana">
       <div onClick={openMenu} className='drop-button'>
         <img src={logoM} className='logoM'/>
         {!showMenu && <i className="fa fa-angle-down" aria-hidden="true"></i>}
@@ -48,7 +47,6 @@ function ProfileButton({ user }) {
         </div>
       )}
     </div>
-    </>
   );
 }
 

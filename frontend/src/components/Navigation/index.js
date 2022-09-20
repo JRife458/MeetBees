@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import LoginFormModal from '../LoginFormModal';
-import logo from '../../assets/meetup-logo.png';
+import logo from '../../assets/meetbeesLOGO.png';
 import './Navigation.css';
 
 function Navigation({ isLoaded }){
@@ -12,9 +12,7 @@ function Navigation({ isLoaded }){
   let sessionLinks;
   if (sessionUser) {
     sessionLinks = (
-      <div className='nav-links'>
         <ProfileButton user={sessionUser} />
-      </div>
     );
   } else {
     sessionLinks = (
@@ -29,11 +27,9 @@ function Navigation({ isLoaded }){
 
   return (
       <div className='navigation'>
-        <div className='nav-links'>
         <NavLink exact to="/">
           <img src={logo} className='logo' />
         </NavLink>
-        </div>
         <div className='nav-links'>
         <NavLink exact to='/groups'>
           <h2>Groups</h2>
