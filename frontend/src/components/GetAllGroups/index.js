@@ -4,12 +4,17 @@ import {getGroups} from '../../store/groups'
 import { useEffect } from 'react';
 
 import GroupDetails from './GroupDetails';
+import { NavLink } from 'react-router-dom';
 
 
 function GetAllGroups() {
   const dispatch = useDispatch()
-  const groups = useSelector(state => Object.values(state.groups))
-
+  const groups = useSelector(state => {
+    if (state.groups.allGroups) {
+      return Object.values(state.groups.allGroups)
+    }
+  })
+  console.log(groups)
 
   useEffect(()=> {
     dispatch(getGroups())
@@ -18,6 +23,7 @@ function GetAllGroups() {
   return (
     <>
     <div>Groups</div>
+    <NavLink exact to='/groups/create'>Create a Group</NavLink>
     {!groups && <span>No groups found.</span> }
     {groups && <ul className='groups-list'>
       {groups?.map((group) => (
