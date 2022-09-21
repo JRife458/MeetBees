@@ -32,3 +32,8 @@
 .login-input {
   margin: 10px;
 }
+
+.create-group-form {
+  display: inline-flex;
+  flex-direction: column;
+}

@@ -49,7 +49,7 @@ function CreateGroup(setShowModal) {
 
   return (
     <form
-      className="group-form"
+      className="create-group-form"
       onSubmit={submitHandler}
     >
       <h2>Create a Group</h2>
@@ -75,8 +75,8 @@ function CreateGroup(setShowModal) {
           value={about}
         />
       </label>
-      <label>
         <label>Type: </label>
+      <label>
         <input
           checked={type === 'Online'}
           type="radio"
