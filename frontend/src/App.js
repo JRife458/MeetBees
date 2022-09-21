@@ -7,7 +7,7 @@ import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
 import GetAllGroups from "./components/GetAllGroups";
 import GetSingleGroup from './components/GetSingleGroup'
-import CreateGroup from "./components/CreateGroup";
+import CreateGroup from "./components/CreateGroupModal";
 import UpdateGroup from "./components/UpdateGroup";
 
 function App() {
@@ -27,9 +27,6 @@ function App() {
           </Route>
           <Route exact path='/groups'>
             <GetAllGroups />
-          </Route>
-          <Route exact path='/groups/create'>
-            <CreateGroup />
           </Route>
           <Route path='/groups/:groupId/update'>
             <UpdateGroup />

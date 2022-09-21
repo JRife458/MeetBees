@@ -8,7 +8,7 @@ function UpdateGroup() {
   const dispatch = useDispatch()
   const history = useHistory();
   const {groupId} = useParams()
-  const group = useSelector(state => state.groups[groupId] )
+  const group = useSelector(state => state.groups.allGroups[groupId] )
   const [name, setName] = useState(group?.name);
   const [about, setAbout] = useState(group?.about);
   const [type, setType] = useState(group?.type);
@@ -27,14 +27,14 @@ function UpdateGroup() {
     const errors = [];
 
     if (groups.find((group) => group.name === name)
-        && name !== group.name) {
+        && name !== group?.name) {
       errors.push('Name already exists.')
     } else if (!name?.length) {
       errors.push('Name Required')
     }
-    if (about.length < 50) errors.push('About must be 50 characters or more')
-    if (!city.length) errors.push('City required')
-    if (!state.length) errors.push('State required')
+    if (about?.length < 50) errors.push('About must be 50 characters or more')
+    if (!city?.length) errors.push('City required')
+    if (!state?.length) errors.push('State required')
     setValidationErrors(errors)
     }, [name, about, city, state]);
 

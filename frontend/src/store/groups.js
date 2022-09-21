@@ -1,7 +1,9 @@
+import GetSingleGroup from '../components/GetSingleGroup';
 import { csrfFetch } from './csrf';
 
 const GET_GROUPS = 'groups/getGroups';
 const GET_SINGLE_GROUP = 'group/getGroupById'
+const CREATE_GROUP = 'group/getGroupById'
 const DELETE_GROUP = 'group/deleteGroup'
 
 const populateGroups = (groups) => {
@@ -15,6 +17,13 @@ const populateSingleGroup = (singleGroup) => {
   return {
     type: GET_SINGLE_GROUP,
     singleGroup
+  }
+};
+
+const createGroup = (newGroup) => {
+ return {
+  type: CREATE_GROUP,
+  newGroup
   }
 };
 
@@ -63,7 +72,7 @@ export const groupCreator = (body, userId) => async (dispatch) => {
   })
   if (response.ok) {
     const data = await response.json()
-    dispatch(populateSingleGroup);
+    dispatch(createGroup(data));
     return data
   }
 }
@@ -83,7 +92,7 @@ export const groupUpdater = (body, groupId) => async (dispatch) => {
   })
   if (response.ok) {
     const data = await response.json()
-    dispatch(populateSingleGroup);
+    dispatch(getGroupById(data.id));
     return data
   }
 }
@@ -115,12 +124,14 @@ const groupsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       newState.singleGroup = action.singleGroup
       return newState;
+    case CREATE_GROUP:
+      newState = Object.assign({}, state);
+      newState.allGroups[action.newGroup.id] = action.newGroup
+      return newState
     case DELETE_GROUP:
       newState = Object.assign({}, state);
       delete newState.allGroups[action.groupId]
-      console.log('state before', newState.allGroups)
       newState.allGroups = Object.values(newState.allGroups).filter(id => id !==action.groupId)
-      console.log('state after', newState.allGroups)
       return newState;
     default:
       return state;

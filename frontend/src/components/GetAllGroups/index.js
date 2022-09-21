@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 import GroupDetails from './GroupDetails';
 import { NavLink } from 'react-router-dom';
+import CreateGroupFormModal from '../CreateGroupModal';
 
 
 function GetAllGroups() {
@@ -14,7 +15,6 @@ function GetAllGroups() {
       return Object.values(state.groups.allGroups)
     }
   })
-  console.log(groups)
 
   useEffect(()=> {
     dispatch(getGroups())
@@ -23,7 +23,7 @@ function GetAllGroups() {
   return (
     <>
     <div>Groups</div>
-    <NavLink exact to='/groups/create'>Create a Group</NavLink>
+    <CreateGroupFormModal/>
     {!groups && <span>No groups found.</span> }
     {groups && <ul className='groups-list'>
       {groups?.map((group) => (

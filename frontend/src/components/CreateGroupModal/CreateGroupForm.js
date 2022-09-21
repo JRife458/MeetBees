@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import {groupCreator, getGroups} from '../../store/groups'
 import { useDispatch, useSelector } from 'react-redux';
 
-function CreateGroup() {
+function CreateGroup(setShowModal) {
   const dispatch = useDispatch()
   const history = useHistory();
   const [name, setName] = useState('');
@@ -34,7 +34,7 @@ function CreateGroup() {
     setValidationErrors(errors)
     }, [name, about, city, state]);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
       e.preventDefault();
       const body = {
         name: name,
@@ -43,9 +43,8 @@ function CreateGroup() {
         state: state,
         type: type,
         privateBoolean: privateBoolean }
-      dispatch(groupCreator(body, userId))
-
-      history.push('/groups');
+        const newGroup = await dispatch(groupCreator(body, userId))
+        history.push(`/groups/${newGroup.id}`)
     };
 
   return (
