@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {getGroupById, getGroups, groupDelete} from '../../store/groups'
 import { useEffect } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
+import './SingleGroup.css'
+
+import AddGroupImage from '../AddGroupImage';
 
 
 function GetSingleGroup() {
@@ -28,15 +31,20 @@ function GetSingleGroup() {
     <div>Group</div>
     {!group && <span>Group not found</span>}
      {group &&
-      <div>
+      <div className='groupInfo'>
         <NavLink to={`/groups/${groupId}/update`}>Update</NavLink>
         <button onClick={deleteGroup}>Delete Group</button>
-        <br></br>
+        <AddGroupImage />
         <span>{group?.name}</span>
-        <br></br>
         <span>Organizer: {group?.Organizer?.firstName}</span>
-        <br></br>
         <span>What we're about: {group?.about}</span>
+        <div>
+        {group.GroupImages.map(image => (
+          <div className='image-container'>
+        <img className='images' key={image.id} src={image.url}></img>
+          </div>
+      ))}
+        </div>
     </div>}
     </>
   )

@@ -15,22 +15,22 @@ module.exports = {
      await queryInterface.bulkInsert('GroupImages', [
        {
         groupId: 1,
-        url: 'demo url 1-1',
+        url: 'https://ih1.redbubble.net/image.364942106.9816/flat,750x1000,075,f.jpg',
         preview: true
        },
        {
         groupId: 1,
-        url: 'demo url 1-2',
+        url: 'https://ih1.redbubble.net/image.364942106.9816/flat,750x1000,075,f.jpg',
         preview: false
        },
        {
         groupId: 2,
-        url: 'demo url 2',
+        url: 'https://ih1.redbubble.net/image.364942106.9816/flat,750x1000,075,f.jpg',
         preview: false
        },
        {
         groupId: 3,
-        url: 'demo url 3',
+        url: 'https://ih1.redbubble.net/image.364942106.9816/flat,750x1000,075,f.jpg',
         preview: true
        }
       ], {});

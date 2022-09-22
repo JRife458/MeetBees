@@ -1,4 +1,3 @@
-import GetSingleGroup from '../components/GetSingleGroup';
 import { csrfFetch } from './csrf';
 
 const GET_GROUPS = 'groups/getGroups';

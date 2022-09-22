@@ -1,0 +1,28 @@
+.preview-image {
+  width: 175px;
+  height: 100px;
+}
+
+.image-container {
+  display: flex;
+  margin-top: 21.28px;
+}
+
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.group-details {
+  display: flex;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.234);
+}
+
+.group-name {
+  margin-bottom: 0%;
+}
+
+.group-location {
+  margin-top: 0%;
+}

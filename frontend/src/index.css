@@ -1,1 +1,6 @@
 /* TODO Add site wide styles */
+.site-container {
+  display: inline-block;
+  align-items: center;
+  width: 75%;
+}

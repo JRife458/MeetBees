@@ -7,8 +7,8 @@ import SignupFormPage from "./components/SignupFormPage";
 import Navigation from "./components/Navigation";
 import GetAllGroups from "./components/GetAllGroups";
 import GetSingleGroup from './components/GetSingleGroup'
-import CreateGroup from "./components/CreateGroupModal";
 import UpdateGroup from "./components/UpdateGroup";
+import GetAllEvents from "./components/GetAllEvents";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
+        <div className="site-container">
         <Switch>
           <Route path="/signup">
             <SignupFormPage />
@@ -34,7 +35,11 @@ function App() {
           <Route path='/groups/:groupId'>
             <GetSingleGroup />
           </Route>
+          <Route path='/events'>
+            <GetAllEvents />
+          </Route>
         </Switch>
+        </div>
       )}
     </>
   );
