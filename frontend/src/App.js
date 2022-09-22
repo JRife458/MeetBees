@@ -9,6 +9,8 @@ import GetAllGroups from "./components/GetAllGroups";
 import GetSingleGroup from './components/GetSingleGroup'
 import UpdateGroup from "./components/UpdateGroup";
 import GetAllEvents from "./components/GetAllEvents";
+import GetSingleEvent from './components/GetSingleEvent'
+import HomePage from "./components/Home";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +25,9 @@ function App() {
       {isLoaded && (
         <div className="site-container">
         <Switch>
+          <Route exact path='/'>
+            <HomePage />
+          </Route>
           <Route path="/signup">
             <SignupFormPage />
           </Route>
@@ -35,8 +40,11 @@ function App() {
           <Route path='/groups/:groupId'>
             <GetSingleGroup />
           </Route>
-          <Route path='/events'>
+          <Route exact path='/events'>
             <GetAllEvents />
+          </Route>
+          <Route path='/events/:eventId'>
+            <GetSingleEvent />
           </Route>
         </Switch>
         </div>

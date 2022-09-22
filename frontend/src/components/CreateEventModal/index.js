@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { Modal } from '../../context/Modal';
-import CreateGroupForm from './CreateGroupForm';
+import CreateEventForm from './CreateEventForm';
 
-function CreateGroupFormModal() {
+function CreateEventFormModal() {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
-      <button onClick={() => setShowModal(true)}>Create Group</button>
+      <button onClick={() => setShowModal(true)}>Create Event</button>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <CreateGroupForm />
+          <CreateEventForm />
         </Modal>
       )}
     </>
   );
 }
 
-export default CreateGroupFormModal;
+export default CreateEventFormModal;

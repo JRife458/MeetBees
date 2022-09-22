@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import {getEvents} from '../../store/events'
 import EventDetails from './EventDetails';
+import { NavLink } from 'react-router-dom';
 
 function GetAllEvents() {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ function GetAllEvents() {
   return (
     <>
     <span>Events</span>
+    <NavLink to='/groups'>Groups</NavLink>
     {!events && <span>No Events Found.</span>}
     {events && <ul className='events-list'>
       {events?.map((event) => (

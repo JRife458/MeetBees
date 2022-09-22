@@ -7,7 +7,6 @@ import './Groups.css'
 import GroupDetails from './GroupDetails';
 import { NavLink } from 'react-router-dom';
 import CreateGroupFormModal from '../CreateGroupModal';
-import GetAllEvents from '../GetAllEvents';
 
 
 function GetAllGroups() {
