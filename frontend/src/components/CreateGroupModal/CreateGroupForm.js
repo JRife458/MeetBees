@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import {groupCreator, getGroups} from '../../store/groups'
 import { useDispatch, useSelector } from 'react-redux';
 
-function CreateGroup(setShowModal) {
+function CreateGroup() {
   const dispatch = useDispatch()
   const history = useHistory();
   const [name, setName] = useState('');

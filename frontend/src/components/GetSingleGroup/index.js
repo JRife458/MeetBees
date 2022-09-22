@@ -6,6 +6,7 @@ import {NavLink, useParams, useHistory} from 'react-router-dom'
 import './SingleGroup.css'
 
 import AddGroupImage from '../AddGroupImage';
+import CreateEventFormModal from '../CreateEventModal';
 
 
 function GetSingleGroup() {
@@ -35,6 +36,7 @@ function GetSingleGroup() {
         <NavLink to={`/groups/${groupId}/update`}>Update</NavLink>
         <button onClick={deleteGroup}>Delete Group</button>
         <AddGroupImage />
+        <CreateEventFormModal />
         <span>{group?.name}</span>
         <span>Organizer: {group?.Organizer?.firstName}</span>
         <span>What we're about: {group?.about}</span>
