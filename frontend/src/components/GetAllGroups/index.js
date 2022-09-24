@@ -23,10 +23,15 @@ function GetAllGroups() {
 
   return (
     <>
-    <div>Groups</div>
-    <NavLink to='/events'>
-      <div>Events</div>
+    <div className='links'>
+    <NavLink className='link' to='/events'>
+      <h3>Events</h3>
     </NavLink>
+    <NavLink className='link active' to='/groups'>
+      <h3>Groups</h3>
+    </NavLink>
+    </div>
+    <br></br>
     <CreateGroupFormModal/>
     <br></br>
     {!groups && <span>No groups found.</span> }

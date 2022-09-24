@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal } from '../../context/Modal';
 import CreateEventForm from './CreateEventForm';
 
-function CreateEventFormModal() {
+function CreateEventFormModal({venues}) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -10,7 +10,7 @@ function CreateEventFormModal() {
       <button onClick={() => setShowModal(true)}>Create Event</button>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <CreateEventForm />
+          <CreateEventForm venues={venues}/>
         </Modal>
       )}
     </>

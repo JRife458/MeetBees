@@ -3,14 +3,14 @@ import { useHistory, useParams } from 'react-router-dom';
 import { eventCreator, getEvents} from '../../store/events'
 import { useDispatch, useSelector } from 'react-redux';
 
-function CreateEvent() {
+function CreateEvent({venues}) {
   const dispatch = useDispatch()
   const history = useHistory();
   const [venueId, setVenueId] = useState('')
   const [name, setName] = useState('');
   const [type, setType] = useState('In person');
   const [capacity, setCapacity] = useState(1);
-  const [price, setPrice] = useState(5.99)
+  const [price, setPrice] = useState(1.00)
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
@@ -21,6 +21,7 @@ function CreateEvent() {
     }
   })
   const {groupId} = useParams()
+
 
   useEffect(()=> {
     dispatch(getEvents())
@@ -66,13 +67,15 @@ function CreateEvent() {
           validationErrors.map((error) => <li key={error}>{error}</li>)}
       </ul>
       <label>
-        Venue Id:
-        <input
-          type="text"
-          name="venueId"
-          onChange={(e) => setVenueId(e.target.value)}
-          value={venueId}
-        />
+        Venue:
+        <select
+        name='venueId'
+        onChange={(e) => setVenueId(e.target.value)}
+        >
+        {venues && venues.map((venue) => (
+          <option value={venue.id}>{venue.address}</option>
+        ))}
+        </select>
       </label>
       <label>
         Name:
@@ -85,8 +88,7 @@ function CreateEvent() {
       </label>
       <label>
         Description:
-        <input
-          type="text"
+        <textarea
           name="description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
@@ -116,7 +118,7 @@ function CreateEvent() {
       <label>
         Start:
         <input
-          type="text"
+          type="datetime-local"
           name="startDate"
           onChange={(e) => setStartDate(e.target.value)}
           value={startDate}
@@ -125,7 +127,7 @@ function CreateEvent() {
       <label>
         End:
         <input
-          type="text"
+          type="datetime-local"
           name="endDate"
           onChange={(e) => setEndDate(e.target.value)}
           value={endDate}
@@ -134,8 +136,9 @@ function CreateEvent() {
       <label>
         Capacity :
         <input
-          type="text"
+          type="number"
           name="capacity"
+          min='1'
           onChange={(e) => setCapacity(e.target.value)}
           value={capacity}
         />
@@ -143,8 +146,10 @@ function CreateEvent() {
       <label>
         Price :
         <input
-          type="text"
+          type="number"
           name="price"
+          min='1'
+          step='0.01'
           onChange={(e) => setPrice(e.target.value)}
           value={price}
         />

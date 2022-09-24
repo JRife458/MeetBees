@@ -4,3 +4,34 @@
   align-items: center;
   width: 75%;
 }
+
+p {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+h3, h4 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
+label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+button {
+  background: #008294;
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}

@@ -1,0 +1,8 @@
+.create-group-button {
+  background: #008294;
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+}

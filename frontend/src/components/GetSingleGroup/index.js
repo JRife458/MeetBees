@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import './SingleGroup.css'
 
-import AddGroupImage from '../AddGroupImage';
 import CreateEventFormModal from '../CreateEventModal';
+import AddGroupImageFormModal from '../AddGroupImageModal'
 
 
 function GetSingleGroup() {
@@ -29,17 +29,21 @@ function GetSingleGroup() {
 
   return (
     <>
-    <div>Group</div>
+    <h2>{group?.name}</h2>
     {!group && <span>Group not found</span>}
      {group &&
       <div className='groupInfo'>
-        <NavLink to={`/groups/${groupId}/update`}>Update</NavLink>
+        <div>
+        <NavLink to={`/groups/${groupId}/update`}>
+          <button>Update Group</button>
+        </NavLink>
         <button onClick={deleteGroup}>Delete Group</button>
-        <AddGroupImage />
-        <CreateEventFormModal />
-        <span>{group?.name}</span>
-        <span>Organizer: {group?.Organizer?.firstName}</span>
-        <span>What we're about: {group?.about}</span>
+        <AddGroupImageFormModal groupId={groupId}/>
+        <CreateEventFormModal venues={group.Venues}/>
+        </div>
+        <h3>Organizer: {group?.Organizer?.firstName}</h3>
+        <h4>What we're about:</h4>
+        <p>{group?.about}</p>
         <div>
         {group.GroupImages.map(image => (
           <div className='image-container'>

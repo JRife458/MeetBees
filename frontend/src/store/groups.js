@@ -4,6 +4,7 @@ const GET_GROUPS = 'groups/getGroups';
 const GET_SINGLE_GROUP = 'group/getGroupById'
 const CREATE_GROUP = 'group/getGroupById'
 const DELETE_GROUP = 'group/deleteGroup'
+const ADD_GROUP_IMAGE = 'group/addImage'
 
 const populateGroups = (groups) => {
   return {
@@ -32,6 +33,14 @@ const deleteSingleGroup = (groupId) => {
     groupId
   }
 };
+
+const addGroupImageAction = (image, groupId) => {
+  return {
+    type: ADD_GROUP_IMAGE,
+    image,
+    groupId
+  }
+}
 
 
 
@@ -107,6 +116,23 @@ export const groupDelete = (groupId) => async (dispatch) => {
   }
 }
 
+export const addGroupImage = (body, groupId) => async (dispatch) => {
+  const {url, preview} = body
+  console.log('Fetch body', body)
+  const response = await csrfFetch(`/api/groups/${groupId}/images`, {
+    method: 'POST',
+    body: JSON.stringify({
+      url,
+      preview
+    })
+  })
+  if (response.ok) {
+    const data = await response.json()
+    dispatch(addGroupImageAction(data, groupId));
+    return data
+  }
+}
+
 const initialState = {};
 
 const groupsReducer = (state = initialState, action) => {
@@ -132,6 +158,11 @@ const groupsReducer = (state = initialState, action) => {
       delete newState.allGroups[action.groupId]
       newState.allGroups = Object.values(newState.allGroups).filter(id => id !==action.groupId)
       return newState;
+    case ADD_GROUP_IMAGE:
+      newState = Object.assign({}, state);
+      newState.allGroups[action.groupId].previewImage = action.image.url
+      newState.singleGroup.GroupImages.push(action.image)
+      return newState
     default:
       return state;
   }

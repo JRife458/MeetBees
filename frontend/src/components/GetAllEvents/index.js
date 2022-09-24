@@ -22,8 +22,14 @@ function GetAllEvents() {
 
   return (
     <>
-    <span>Events</span>
-    <NavLink to='/groups'>Groups</NavLink>
+    <div className='links'>
+    <NavLink className='link active' to='/events'>
+      <h3>Events</h3>
+    </NavLink>
+    <NavLink className='link' to='/groups'>
+      <h3>Groups</h3>
+    </NavLink>
+    </div>
     {!events && <span>No Events Found.</span>}
     {events && <ul className='events-list'>
       {events?.map((event) => (

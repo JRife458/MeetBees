@@ -2,10 +2,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .profile-dropdown {
   position: absolute;
+  right: 20px;
   min-width: 200px;
   border: rgba(0, 0, 0, 0.2) solid 1px;
   border-radius: 4%;
@@ -14,21 +16,27 @@
   background-color: white;
 }
 
-.logo {
-  width: 30%;
-  margin-left: 2%;
-  margin-top: 2%;;
-}
-.logoM {
-  width: 30%;
+.profile-label {
+  cursor: pointer;
 }
 
-.drop-button {
+.profile-button {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: right;
   margin-right: 20%;
   cursor: pointer;
+}
+
+.logo {
+  width: 150px;
+  margin-left: 2%;
+  margin-top: 2%;
+  float: left;
+}
+.logoM {
+  width: 100px;
 }
 
 .dropdown-element {

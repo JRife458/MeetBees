@@ -31,11 +31,14 @@ function ProfileButton({ user }) {
   };
 
   return (
-    <div className="banana">
-      <div onClick={openMenu} className='drop-button'>
-        <img src={logoM} className='logoM'/>
-        {!showMenu && <i className="fa fa-angle-down" aria-hidden="true"></i>}
-        {showMenu && <i className="fa fa-angle-up" aria-hidden="true"></i>}
+    <div>
+      <div onClick={openMenu} className='profile-button'>
+          <img src={logoM} className='logoM'/>
+        <div>
+          <label className="profile-label">Profile</label>
+          {!showMenu && <i className="fa fa-angle-down" aria-hidden="true"></i>}
+          {showMenu && <i className="fa fa-angle-up" aria-hidden="true"></i>}
+        </div>
       </div>
       {showMenu && (
         <div className="profile-dropdown">

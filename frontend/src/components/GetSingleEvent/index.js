@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { getEventById } from "../../store/events";
+import { eventDestroyer, getEventById } from "../../store/events";
 
 function GetSingleEvent() {
   const {eventId} = useParams()
@@ -13,9 +13,16 @@ function GetSingleEvent() {
     dispatch(getEventById(eventId))
   }, [dispatch])
 
+  const deleteEvent = (e) => {
+    e.preventDefault()
+    dispatch(eventDestroyer(eventId))
+    history.push('/events');
+  }
+
   return (
     <div>
       <div>Event</div>
+      <button onClick={deleteEvent}>Delete Event</button>
     {!event && <span>Event not found</span>}
      {event &&
       <div className='eventInfo'>

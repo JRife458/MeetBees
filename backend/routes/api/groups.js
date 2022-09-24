@@ -37,7 +37,7 @@ const validateGroupCreate = [
     .exists({ checkFalsy: true })
     .withMessage('Must provide a url'),
     check('preview')
-    .exists({ checkFalsy: true })
+    .isBoolean()
     .withMessage('Preview must be a boolean'),
     handleValidationErrors
   ]

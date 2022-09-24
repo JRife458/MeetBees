@@ -1,0 +1,44 @@
+.splash-message {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.content {
+  display: inline-flex;
+  flex-direction: row;
+}
+
+.site-container {
+  width: 65%;
+}
+
+.splash-image {
+  width: 474.5px;
+  height: 30%;
+}
+
+.home-cards-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.home-cards {
+  display: inline-flex;
+  flex-direction: column;
+  margin: 20px;
+  text-decoration: none;
+  color: #008294;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+.home-cards:hover {
+  text-decoration: underline;
+}
+
+.card-image {
+  border-radius: 10px;
+}
