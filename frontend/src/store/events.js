@@ -45,7 +45,7 @@ const normalizeDate = (date) => {
   const minutes = newDate.getMinutes()
   let time
   if (hours === 0) time = `12:${minutes} AM`
-  else if (hours < 13) time = `${hours - 12}:${minutes} PM`
+  else if (hours > 13) time = `${hours - 12}:${minutes} PM`
   else if (hours === 12) time = `12:${minutes} PM`
   else time = `${hours}:${minutes} AM`
   return `${weekDay}, ${month} ${dayOfMonth}, ${year} at ${time}`

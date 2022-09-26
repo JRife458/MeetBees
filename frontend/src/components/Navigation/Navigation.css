@@ -9,6 +9,10 @@
   border-bottom: solid 1px rgba(0, 0, 0, 0.15);
 }
 
+.nav-links {
+  margin: 10px;
+}
+
 .profile-dropdown {
   position: absolute;
   right: 20px;

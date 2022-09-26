@@ -2,6 +2,7 @@ import { useEffect, useState, } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import {getGroups, getGroupById, groupUpdater} from '../../store/groups'
 import { useDispatch, useSelector } from 'react-redux';
+import './UpdateGroup.css'
 
 
 function UpdateGroup() {
@@ -54,7 +55,7 @@ function UpdateGroup() {
 
   return (
       <form
-        className="group-form"
+        className="edit-group-form"
         onSubmit={submitHandler}
       >
         <h2>Update {group?.name}</h2>
@@ -62,26 +63,28 @@ function UpdateGroup() {
           {validationErrors.length > 0 &&
             validationErrors.map((error) => <li key={error}>{error}</li>)}
         </ul>
-        <label>
+        <label className='edit-group-element'>
           Name:
           <input
+          className='edit-group-input'
             type="text"
             name="name"
             onChange={(e) => setName(e.target.value)}
             value={name}
           />
         </label>
-        <label>
+        <label className='edit-group-element'>
           About:
-          <input
+          <textarea
+          className='edit-group-input'
             type="text"
             name="about"
             onChange={(e) => setAbout(e.target.value)}
             value={about}
-          />
+          ></textarea>
         </label>
-        <label>
-          <label>Type: </label>
+          <label className='edit-group-checkbox-element'>Type:
+        <label className='edit-group-checkbox'>
           <input
             checked={type === 'Online'}
             type="radio"
@@ -91,7 +94,7 @@ function UpdateGroup() {
           />
           Online
         </label>
-        <label>
+        <label className='edit-group-checkbox'>
           <input
             checked={type === 'In person'}
             type="radio"
@@ -101,26 +104,29 @@ function UpdateGroup() {
           />
           In Person
         </label>
-        <label>
+        </label>
+        <label className='edit-group-element'>
           City:
           <input
+          className='edit-group-input'
             type="text"
             name="city"
             onChange={(e) => setCity(e.target.value)}
             value={city}
           />
         </label>
-        <label>
+        <label className='edit-group-element'>
           State:
           <input
+            className='edit-group-input'
             type="text"
             name="state"
             onChange={(e) => setState(e.target.value)}
             value={state}
           />
         </label>
-        <label>
-          Private :
+        <label className='edit-group-checkbox'>
+          Private:
           <input
             type="checkbox"
             name="privateBoolean"
@@ -130,6 +136,7 @@ function UpdateGroup() {
           />
         </label>
         <button
+          className='update-group-button'
           type="submit"
           disabled={!!validationErrors.length}
         >

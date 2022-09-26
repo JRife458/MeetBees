@@ -30,12 +30,12 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className='login-form'>
+      <h1>Log In</h1>
       <ul>
         {errors.map((error, idx) => (
           <li key={idx}>{error}</li>
         ))}
       </ul>
-      <div >
       <label>
         Username or Email
         <input
@@ -46,8 +46,6 @@ function LoginForm() {
           required
         />
       </label>
-      </div>
-      <div >
       <label>
         Password
         <input
@@ -58,9 +56,10 @@ function LoginForm() {
           required
         />
       </label>
+      <div className="login-form-buttons">
+        <button type="submit">Log In</button>
+        <button onClick={demoUser}>Demo User</button>
       </div>
-      <button type="submit">Log In</button>
-      <button onClick={demoUser}>Demo User</button>
     </form>
   );
 }

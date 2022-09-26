@@ -30,7 +30,7 @@ function AddGroupImageForm({onClose, groupId}) {
         {validationErrors.length > 0 &&
           validationErrors.map((error) => <li key={error}>{error}</li>)}
       </ul>
-      <label>
+      <label className='create-group-element'>
         Url:
         <input
           type="text"
@@ -39,8 +39,8 @@ function AddGroupImageForm({onClose, groupId}) {
           value={url}
         />
       </label>
-      <label>
-        Preview :
+      <label className='create-group-checkbox'>
+        Preview:
         <input
           type="checkbox"
           name="preview"

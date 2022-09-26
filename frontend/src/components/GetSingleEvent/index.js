@@ -29,16 +29,18 @@ function GetSingleEvent() {
     <div>
       {!event && <span>Event not found</span>}
       {event &&
-      <div>
-        <div className='eventInfo'>
+      <div className="single-event">
+        <div className='single-event-info'>
           <time>{event?.startDate}</time>
           <h1>{event?.name}</h1>
         </div>
-        <div>
-          <div className="event-preview-image-container">
-            <img className="event-preview-image" src={previewImage}></img>
-          </div>
-          <div>
+        <div className="event-container">
+          <div className="event-image-info">
+            <div className="event-preview-image-container">
+              <img className="event-preview-image" src={previewImage}></img>
+            </div>
+
+          <div className="other-event-info">
             <div className="event-group">
               <NavLink to={`/groups/${event?.Group?.id}`}>
                 <i className="fa-solid fa-users-rectangle fa-3x"></i>
@@ -48,29 +50,30 @@ function GetSingleEvent() {
                 <p>{event?.Group?.private === true ? 'Private Group' : 'Public Group'}</p>
               </div>
             </div>
-            <div className="time">
-              <i className="fa-regular fa-clock"></i>
-              <time>{event.startDate} to {event.endDate}</time>
-            </div>
-            <div className="location">
-              {event?.type === 'Online' ?
-                <div>
-                  <i className="fa-solid fa-video"></i>
-                  <p>Online Event</p>
-                </div>
-                :
-                <div className="location">
-                  <i className="fa-solid fa-location-dot"></i>
-                  <div className="event-address">
-                    <p>{event?.Venue?.address}</p>
-                    <p>{event?.Venue?.city} · {event?.Venue?.state}</p>
+            <div className="event-time-location">
+              <div className="time">
+                <i className="fa-regular fa-clock"></i>
+                <time>{event.startDate} to {event.endDate}</time>
+              </div>
+                {event?.type === 'Online' ?
+                  <div className="location">
+                    <i className="fa-solid fa-video"></i>
+                    <p>Online Event</p>
                   </div>
-                </div>
-              }
+                  :
+                  <div className="location">
+                    <i className="fa-solid fa-location-dot"></i>
+                    <div className="event-address">
+                      <p>{event?.Venue?.address}</p>
+                      <p>{event?.Venue?.city} · {event?.Venue?.state}</p>
+                    </div>
+                  </div>
+                }
             </div>
           </div>
-          {user && <button onClick={deleteEvent}>Delete Event</button>}
-          <div className="event-details">
+          </div>
+          <div className="single-event-details">
+            {user && <button className="delete-event-button" onClick={deleteEvent}>Delete Event</button>}
             <h2>Details</h2>
             <p>{event?.description}</p>
           </div>

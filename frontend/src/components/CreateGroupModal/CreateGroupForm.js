@@ -57,7 +57,7 @@ function CreateGroup() {
         {validationErrors.length > 0 &&
           validationErrors.map((error) => <li key={error}>{error}</li>)}
       </ul>
-      <label>
+      <label className='create-group-element'>
         Name:
         <input
           type="text"
@@ -66,37 +66,37 @@ function CreateGroup() {
           value={name}
         />
       </label>
-      <label>
+      <label className='create-group-element'>
         About:
-        <input
-          type="text"
+        <textarea
           name="about"
           onChange={(e) => setAbout(e.target.value)}
           value={about}
-        />
+        ></textarea>
       </label>
-        <label>Type: </label>
-      <label>
-        <input
-          checked={type === 'Online'}
-          type="radio"
-          value="Online"
-          name="type"
-          onChange={(e) => setType(e.target.value)}
-        />
-        Online
+      <label className='create-group-element'>Type:
+        <label className='create-group-checkbox'>
+          <input
+             checked={type === 'Online'}
+            type="radio"
+             value="Online"
+             name="type"
+            onChange={(e) => setType(e.target.value)}
+             />
+           Online
+        </label>
+        <label className='create-group-checkbox'>
+          <input
+             checked={type === 'In person'}
+             type="radio"
+             value="In person"
+             name="type"
+             onChange={(e) => setType(e.target.value)}
+            />
+          In Person
+        </label>
       </label>
-      <label>
-        <input
-          checked={type === 'In person'}
-          type="radio"
-          value="In person"
-          name="type"
-          onChange={(e) => setType(e.target.value)}
-        />
-        In Person
-      </label>
-      <label>
+      <label className='create-group-element'>
         City:
         <input
           type="text"
@@ -105,7 +105,7 @@ function CreateGroup() {
           value={city}
         />
       </label>
-      <label>
+      <label className='create-group-element'>
         State:
         <input
           type="text"
@@ -114,8 +114,8 @@ function CreateGroup() {
           value={state}
         />
       </label>
-      <label>
-        Private :
+      <label className='create-group-checkbox'>
+        Private:
         <input
           type="checkbox"
           name="privateBoolean"

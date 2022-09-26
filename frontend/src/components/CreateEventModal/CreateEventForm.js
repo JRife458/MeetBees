@@ -68,7 +68,7 @@ function CreateEvent({venues}) {
         {validationErrors.length > 0 &&
           validationErrors.map((error) => <li key={error}>{error}</li>)}
       </ul>
-      <label>
+      <label className='create-event-element'>
         Name:
         <input
           type="text"
@@ -77,7 +77,7 @@ function CreateEvent({venues}) {
           value={name}
         />
       </label>
-      <label>
+      <label className='create-event-element'>
         Description:
         <textarea
           name="description"
@@ -85,9 +85,9 @@ function CreateEvent({venues}) {
           value={description}
         />
       </label>
-      <label>Type:
+      <label className='create-event-element'>Type:
         {disabled && <h5>Must add Venues to Host events In Person</h5>}
-        <label>
+        <label className='create-event-checkbox'>
           <input
             checked={type === 'Online'}
             type="radio"
@@ -97,7 +97,7 @@ function CreateEvent({venues}) {
             />
           Online
         </label>
-        <label>
+        <label className='create-event-checkbox'>
           <input
             checked={type === 'In person'}
             type="radio"
@@ -109,7 +109,7 @@ function CreateEvent({venues}) {
           In Person
         </label>
       </label>
-      {venues && type === 'In person' && <label>
+      {venues && type === 'In person' && <label className='create-event-element'>
             Venue:
             <select
             name='venueId'
@@ -121,7 +121,7 @@ function CreateEvent({venues}) {
             </select>
           </label>
         }
-      <label>
+      <label className='create-event-element'>
         Start:
         <input
           type="datetime-local"
@@ -130,7 +130,7 @@ function CreateEvent({venues}) {
           value={startDate}
         />
       </label>
-      <label>
+      <label className='create-event-element'>
         End:
         <input
           type="datetime-local"
@@ -139,7 +139,7 @@ function CreateEvent({venues}) {
           value={endDate}
         />
       </label>
-      <label>
+      <label className='create-event-element'>
         Capacity :
         <input
           type="number"
@@ -149,7 +149,7 @@ function CreateEvent({venues}) {
           value={capacity}
         />
       </label>
-      <label>
+      <label className='create-event-element'>
         Price :
         <input
           type="number"
