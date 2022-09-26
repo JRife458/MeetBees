@@ -374,6 +374,11 @@ router.post('/:groupId/events', async (req, res, next) => {
     startDate,
     endDate
   })
+  await Attendance.create({
+    userId: currentId,
+    eventId: newEvent.id,
+    status: 'member'
+  })
   return res.json(newEvent)
 })
 

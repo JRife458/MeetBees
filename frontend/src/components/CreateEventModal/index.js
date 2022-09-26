@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from '../../context/Modal';
 import CreateEventForm from './CreateEventForm';
+import './CreateEvent.css'
 
 function CreateEventFormModal({venues}) {
   const [showModal, setShowModal] = useState(false);

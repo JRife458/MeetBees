@@ -1,3 +1,8 @@
+.events-top {
+  border-bottom: solid rgba(0, 0, 0, 0.227) 1px;
+  padding-bottom: 10px;
+}
+
 .event-list {
   display: flex;
   flex-direction: column;
@@ -21,7 +26,36 @@
   text-decoration: none;
 }
 
+.link:hover {
+  text-decoration: underline;
+}
+
 .active {
   text-decoration: underline;
   color: #008294
+}
+
+.event-info {
+  margin-left: 10px;
+}
+
+.event-date {
+  color: rgb(135 116 87)
+}
+
+.preview-image {
+  width: 175px;
+  height: 100px;
+  border-radius: 10px;
+  transition-duration: 0.2s;
+}
+
+.preview-image:hover {
+  opacity: 0.9;
+  transition-duration: 0.2s;
+}
+
+.image-container {
+  display: flex;
+  margin-top: 21.28px;
 }

@@ -19,14 +19,54 @@ module.exports = {
        },
        {
         userId: 2,
+        groupId: 1,
+        status: 'member'
+       },
+       {
+        userId: 3,
+        groupId: 1,
+        status: 'member'
+       },
+       {
+        userId: 2,
+        groupId: 2,
+        status: 'member'
+       },
+       {
+        userId: 3,
         groupId: 2,
         status: 'member'
        },
        {
         userId: 3,
         groupId: 3,
-        status: 'pending'
-      }
+        status: 'member'
+      },
+      {
+        userId: 2,
+        groupId: 4,
+        status: 'member'
+       },
+       {
+        userId: 2,
+        groupId: 5,
+        status: 'member'
+       },
+       {
+        userId: 2,
+        groupId: 6,
+        status: 'member'
+       },
+       {
+        userId: 2,
+        groupId: 7,
+        status: 'member'
+       },
+       {
+        userId: 2,
+        groupId: 8,
+        status: 'member'
+       },
 
       ], {});
   },

@@ -1,0 +1,15 @@
+.create-event-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.create-event-form > label {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  margin-top: 15px;
+}

@@ -35,6 +35,38 @@ module.exports = {
         state: 'SV',
         lat: '60.3555',
         lng: '100.333333'
+       },
+       {
+        groupId: 4,
+        address: '123 Demo Drive',
+        city: 'Scrumville',
+        state: 'SV',
+        lat: '60.3555',
+        lng: '100.333333'
+       },
+       {
+        groupId: 5,
+        address: '123 Demo Drive',
+        city: 'Scrumville',
+        state: 'SV',
+        lat: '60.3555',
+        lng: '100.333333'
+       },
+       {
+        groupId: 6,
+        address: '123 Demo Drive',
+        city: 'Scrumville',
+        state: 'SV',
+        lat: '60.3555',
+        lng: '100.333333'
+       },
+       {
+        groupId: 7,
+        address: '123 Demo Drive',
+        city: 'Scrumville',
+        state: 'SV',
+        lat: '60.3555',
+        lng: '100.333333'
        }
       ], {});
   },

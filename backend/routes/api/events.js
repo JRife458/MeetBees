@@ -87,7 +87,7 @@ router.get('/:eventId', async (req, res, next) => {
     attributes: ['id', 'name', 'private', 'city', 'state']
   })
 
-  if (event.type === 'In Person') {
+  if (event.type === 'In person') {
     event.Venue = await Venue.findByPk(event.venueId, {
       attributes: {exclude: ['createdAt', 'updatedAt']}
     })

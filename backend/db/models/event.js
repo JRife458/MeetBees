@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isFuture(startDate){
-          let today = newDate
+          let today = new Date
           if(startDate < today){
             throw new Error('Start Date must be in the future!')
           }

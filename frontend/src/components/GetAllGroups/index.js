@@ -16,6 +16,7 @@ function GetAllGroups() {
       return Object.values(state.groups.allGroups)
     }
   })
+  const user = useSelector(state => state.session.user)
 
   useEffect(()=> {
     dispatch(getGroups())
@@ -23,17 +24,19 @@ function GetAllGroups() {
 
   return (
     <>
-    <div className='links'>
-    <NavLink className='link' to='/events'>
-      <h3>Events</h3>
-    </NavLink>
-    <NavLink className='link active' to='/groups'>
-      <h3>Groups</h3>
-    </NavLink>
+    <div className='groups-top'>
+      <div className='links'>
+      <NavLink className='link' to='/events'>
+        <h3>Events</h3>
+      </NavLink>
+      <NavLink className='link active' to='/groups'>
+        <h3>Groups</h3>
+      </NavLink>
+      </div>
+      {user && <div>
+        <CreateGroupFormModal/>
+      </div>}
     </div>
-    <br></br>
-    <CreateGroupFormModal/>
-    <br></br>
     {!groups && <span>No groups found.</span> }
     {groups && <ul className='groups-list'>
       {groups?.map((group) => (

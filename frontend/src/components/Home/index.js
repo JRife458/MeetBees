@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import splashimage from '../../assets/online_events.svg'
-import groupsImage from '../../assets/placeimg_320_200_arch.jpg'
+import eventsImage from '../../assets/placeimg_320_200_arch.jpg'
+import groupsImage from '../../assets/group-image.jpg'
 import './Home.css'
 
 function HomePage() {
@@ -23,7 +24,7 @@ function HomePage() {
             <h4>Find Groups</h4>
         </NavLink>
         <NavLink className='home-cards' to='/events'>
-            <img className='card-image' src={groupsImage}></img>
+            <img className='card-image' src={eventsImage}></img>
             <h4>Find Events</h4>
         </NavLink>
       </div>

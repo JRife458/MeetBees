@@ -11,6 +11,7 @@ import UpdateGroup from "./components/UpdateGroup";
 import GetAllEvents from "./components/GetAllEvents";
 import GetSingleEvent from './components/GetSingleEvent'
 import HomePage from "./components/Home";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function App() {
         </Switch>
         </div>
       )}
+      <Footer />
     </>
   );
 }

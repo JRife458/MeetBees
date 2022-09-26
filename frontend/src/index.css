@@ -1,28 +1,43 @@
 /* TODO Add site wide styles */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 .site-container {
   display: inline-block;
   align-items: center;
   width: 75%;
+  min-height: 100%;
+}
+
+.footer {
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 
 p {
-  font-family: 'Roboto', sans-serif;
   font-weight: 300;
 }
 
-h3, h4 {
-  font-family: 'Roboto', sans-serif;
+h3, h4, label {
   font-weight: 500;
 }
 
 h1 {
-  font-family: 'Roboto', sans-serif;
   font-weight: 700;
-}
-
-label {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
 }
 
 button {
@@ -32,6 +47,9 @@ button {
   border: none;
   border-radius: 40px;
   cursor: pointer;
-  font-family: 'Roboto', sans-serif;
   font-weight: 700;
+}
+
+button:disabled {
+  background-color: lightslategrey;
 }
