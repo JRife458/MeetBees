@@ -9,6 +9,16 @@ function AddGroupImageForm({onClose, groupId}) {
   const [url, setUrl] = useState('');
   const [preview, setPreview] = useState(false)
   const [validationErrors, setValidationErrors] = useState([]);
+
+  useEffect(() => {
+    const errors = [];
+
+    if (!url.length) {
+      errors.push('Url Required')
+    }
+    setValidationErrors(errors)
+    }, [url]);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     const body = {
