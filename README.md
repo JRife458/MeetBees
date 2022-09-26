@@ -25,3 +25,75 @@ Wiki: [Link](https://github.com/Mancussion/API-project/wiki)
 ### Hosting:
 
 ![Heroku](https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white)
+
+## Features
+
+### Home Page:
+
+Here you can go directly to a list of groups or events
+
+![home]
+
+[home]: ./assets/home.png
+
+### Sign Up and Log In
+
+You can sign up or log in at any time by clicking the buttons in the top right. There is also an option to log in as the Demo User
+
+![sign up]
+![log in]
+
+[sign up]: ./assets/sign-up.png
+[log in]: ./assets/log-in.png
+
+### Groups
+
+Here you can view a list of all Groups. Clicking on the preview image will take you to it's details
+
+![groups]
+![group details]
+
+[groups]: ./assets/all-groups.png
+[group details]: ./assets/single-group.png
+
+If you are a Member of the group, you also have options to update and delete the group, add group images, or create an event for the group
+
+![update group]
+![add image]
+![create event]
+
+[update group]: ./assets/edit-group.png
+[add image]: ./assets/add-image.png
+[create event]: ./assets/Create-event.png
+
+### Events
+
+Here you can view a list of all Events. Like with groups, clicking on the preview image will take you to it's details. There is also an option to delete the event if you are logged in.
+
+![events]
+![event details]
+
+[events]: ./assets/all-events.png
+[event details]: ./assets/single-event.png
+
+## Upcoming Features
+
+* Add Event Images
+
+* Request Membership for Groups
+
+* Request Attendance for Events
+
+## Set Up
+
+* Clone the repo
+
+* Open 2 Terminals, one in the backend folder and one in the front
+
+* Run <code>npm install</code> and run <code>npm start</code> in the backend terminal, then in the front
+
+## Contact Me
+
+* Email: <code>jrife458@gmail.com</code>
+
+* Linkedin: [Link](https://www.linkedin.com/in/justin-rife-730875181/)
