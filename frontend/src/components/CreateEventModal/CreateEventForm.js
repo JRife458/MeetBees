@@ -28,9 +28,7 @@ function CreateEvent({venues}) {
   useEffect(() => {
     const errors = [];
 
-    if (!name.length) {
-      errors.push('Name Required')
-    }
+    if (!name.length) errors.push('Name Required')
     if (description.length < 50) errors.push('About must be 50 characters or more')
     if (!startDate.length) errors.push('Start Date required')
     if (!endDate.length) errors.push('End Date required')
@@ -39,7 +37,6 @@ function CreateEvent({venues}) {
 
     const submitHandler = async (e) => {
       e.preventDefault();
-      setValidationErrors([]);
       const body = {
         venueId: type === 'In person' ? venueId : null,
         name: name,
@@ -50,12 +47,14 @@ function CreateEvent({venues}) {
         endDate: endDate,
         price: price }
         const newEvent = await dispatch(eventCreator(body, groupId)).catch(
-          async (data) => {
-            if (data && data.errors) return setValidationErrors(data.errors);
+          async (res) => {
+            const data = await res.json();
+            if ( data && data.errors) return setValidationErrors(data.errors);
             else return data
           }
         )
-        history.push(`/events/${newEvent.id}`)
+        console.log(validationErrors)
+        if (!validationErrors.length) history.push(`/events/${newEvent.id}`)
     };
 
   return (
@@ -99,6 +98,7 @@ function CreateEvent({venues}) {
         </label>
         <label className='create-event-checkbox'>
           <input
+            className='create-event-checkbox-input'
             checked={type === 'In person'}
             type="radio"
             value="In person"

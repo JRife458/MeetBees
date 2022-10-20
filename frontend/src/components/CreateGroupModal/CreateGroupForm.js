@@ -22,12 +22,7 @@ function CreateGroup() {
 
   useEffect(() => {
     const errors = [];
-
-    if (groups.find((group) => group.name === name)) {
-      errors.push('Name already exists.')
-    } else if (!name.length) {
-      errors.push('Name Required')
-    }
+    if (!name.length) errors.push('Name Required')
     if (about.length < 50) errors.push('About must be 50 characters or more')
     if (!city.length) errors.push('City required')
     if (!state.length) errors.push('State required')
@@ -36,6 +31,7 @@ function CreateGroup() {
 
     const submitHandler = async (e) => {
       e.preventDefault();
+      setValidationErrors([]);
       const body = {
         name: name,
         about: about,
@@ -43,8 +39,14 @@ function CreateGroup() {
         state: state,
         type: type,
         privateBoolean: privateBoolean }
-        const newGroup = await dispatch(groupCreator(body, userId))
-        history.push(`/groups/${newGroup.id}`)
+      const newGroup = await dispatch(groupCreator(body, userId)).catch(
+        async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setValidationErrors(data.errors)
+        }
+        )
+      if (!validationErrors.length) history.push(`/groups/${newGroup.id}`)
+
     };
 
   return (

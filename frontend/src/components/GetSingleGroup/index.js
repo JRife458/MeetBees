@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getGroupById, getGroups, groupDelete} from '../../store/groups'
+import {getGroupById, getGroupEventsById, getGroups, groupDelete} from '../../store/groups'
 import { useEffect } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import beeLogo from '../../assets/meetbees.png'
@@ -8,6 +8,7 @@ import './SingleGroup.css'
 
 import CreateEventFormModal from '../CreateEventModal';
 import AddGroupImageFormModal from '../AddGroupImageModal'
+import EventDetails from '../GetAllEvents/EventDetails';
 
 
 function GetSingleGroup() {
@@ -17,6 +18,11 @@ function GetSingleGroup() {
   const group = useSelector(state => {
     return state.groups.singleGroup})
   const user = useSelector(state => state.session.user)
+  const events = useSelector(state => {
+     if (state.groups.singleGroupEvents) {
+      return Object.values(state.groups.singleGroupEvents)
+      }
+  })
   let previewImage = group?.GroupImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
   let privateString = group?.private === true ? 'Private' : 'Public'
@@ -25,6 +31,7 @@ function GetSingleGroup() {
 
   useEffect(()=> {
     dispatch(getGroupById(groupId))
+    dispatch(getGroupEventsById(groupId))
     dispatch(getGroups())
   }, [dispatch])
 
@@ -86,12 +93,20 @@ function GetSingleGroup() {
             <h3>Group Images</h3>
             <div className='group-images'>
               {group?.GroupImages.map(image => (
-                <div className='group-image-container'>
-                  <img className='group-image' key={image.id} src={image.url}></img>
+                <div className='group-image-container' key={image.id}>
+                  <img className='group-image' src={image.url}></img>
                 </div>
               ))}
               </div>
           </div>
+        </div>
+        <div className='group-events'>
+          <h2>Group Events</h2>
+        {events && <ul className='events-list'>
+      {events?.map((event) => (
+        <EventDetails key={event.id} event={event} />
+      ))}
+    </ul>}
         </div>
       </div>
     }

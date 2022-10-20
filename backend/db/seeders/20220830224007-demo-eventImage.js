@@ -14,17 +14,17 @@ module.exports = {
      await queryInterface.bulkInsert('EventImages', [
       {
         eventId: 1,
-        url: 'https://pixabay.com/get/gc36dc779e8fb547516b51e5649ec127bdfc937fa9584a6b4c1724b9469909b66b04b7dc9f6566e5c4786929fa406134a_1280.jpg',
+        url: 'https://images.pexels.com/photos/1709003/pexels-photo-1709003.jpeg?auto=compress&cs=tinysrgb&w=400',
         preview: true
       },
       {
         eventId: 2,
-        url: 'https://pixabay.com/get/g6a679f39d06280b695ac2731cfb2a46197f0a6dc5c7fa6da2fdc04de2b01f0c91c0a90cef7b061fcd390538b7b9e4aba_1280.jpg',
+        url: 'https://images.pexels.com/photos/301930/pexels-photo-301930.jpeg?auto=compress&cs=tinysrgb&w=400',
         preview: true
       },
       {
         eventId: 3,
-        url: 'https://pixabay.com/get/g4647dbbe451f7801f7a552cd585b68579c7fff52d428a2603739fbd60c3c0af865ecea1912576898a8f68a7f6d3a3e6a_1280.jpg',
+        url: 'https://images.pexels.com/photos/1822608/pexels-photo-1822608.jpeg?auto=compress&cs=tinysrgb&w=400',
         preview: true
       },
       {
@@ -39,7 +39,7 @@ module.exports = {
       },
       {
         eventId: 6,
-        url: 'https://pixabay.com/get/g7f9deaa7aff1b48c426a8307495177f30b1edfc2c3375d2beb69c1ee447ecd0ec0b269069a0e106a8fedc835a9d1d078_1280.jpg',
+        url: 'https://images.pexels.com/photos/2833037/pexels-photo-2833037.jpeg?auto=compress&cs=tinysrgb&w=400',
         preview: true
       },
       {
