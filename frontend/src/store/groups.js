@@ -5,6 +5,7 @@ const GET_SINGLE_GROUP = 'group/getGroupById'
 const CREATE_GROUP = 'group/getGroupById'
 const DELETE_GROUP = 'group/deleteGroup'
 const ADD_GROUP_IMAGE = 'group/addImage'
+const GET_EVENTS = 'group/getEvents'
 
 const populateGroups = (groups) => {
   return {
@@ -42,6 +43,12 @@ const addGroupImageAction = (image, groupId) => {
   }
 }
 
+const getGroupEvents = (events) => {
+  return {
+    type: GET_EVENTS,
+    events
+  }
+}
 
 
 
@@ -56,9 +63,9 @@ export const getGroups = () => async (dispatch) => {
 };
 
 export const getGroupById = (id) => async (dispatch) => {
-  const response = await csrfFetch(`/api/groups/${id}`)
-  if (response.ok){
-    const data = await response.json();
+  const groupsResponse = await csrfFetch(`/api/groups/${id}`)
+  if (groupsResponse.ok){
+    const data = await groupsResponse.json();
     dispatch(populateSingleGroup(data));
     return data
   }
@@ -133,6 +140,15 @@ export const addGroupImage = (body, groupId) => async (dispatch) => {
   }
 }
 
+export const getGroupEventsById = (id) => async (dispatch) => {
+  const eventsResponse = await csrfFetch(`/api/groups/${id}/events`)
+  if (eventsResponse.ok){
+    const data = await eventsResponse.json();
+    dispatch(getGroupEvents(data));
+    return data
+  }
+};
+
 const initialState = {};
 
 const groupsReducer = (state = initialState, action) => {
@@ -162,6 +178,13 @@ const groupsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       newState.allGroups[action.groupId].previewImage = action.image.url
       newState.singleGroup.GroupImages.push(action.image)
+      return newState
+    case GET_EVENTS:
+      newState = Object.assign({}, state);
+      newState.singleGroupEvents = {}
+      action.events.Events.forEach(event => {
+        newState.singleGroupEvents[event.id] = event
+      });
       return newState
     default:
       return state;

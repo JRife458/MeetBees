@@ -151,10 +151,17 @@ router.get('/:groupId', async (req, res, next) => {
 // Create Group
 router.post('/',
 validateGroupCreate,
-async (req, res) => {
+async (req, res, next) => {
   const { user } = req;
   const currentId = user.id;
   const { name, about, type, private, city, state } = req.body
+  if (await Group.findOne({where: {name: name}})) {
+    const err = new Error("Group with that name already exists");
+    err.status = 403;
+    err.title = 'Group Creation Failed';
+    err.errors = ['Group with that name already exists.'];
+    return next(err);
+  }
   const newGroup = await Group.create({
     organizerId: currentId,
     name,
@@ -197,6 +204,13 @@ async (req, res, next) => {
 // Edit a group
 router.put('/:groupId', async (req, res, next) => {
   const { name, about, type, private, city, state } = req.body
+  if (await Group.findOne({where: {name: name}})) {
+    const err = new Error("Group with that name already exists");
+    err.status = 403;
+    err.title = 'Group Creation Failed';
+    err.errors = ['Group with that name already exists.'];
+    return next(err);
+  }
   const { user } = req
   const currentId = user.id
   const group = await Group.findByPk(req.params.groupId)

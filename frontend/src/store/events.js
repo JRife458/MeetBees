@@ -42,7 +42,8 @@ const normalizeDate = (date) => {
   const year = newDate.getFullYear()
   const dayOfMonth = newDate.getDate()
   const hours = newDate.getHours()
-  const minutes = newDate.getMinutes()
+  let minutes = newDate.getMinutes()
+  if (minutes < 10) minutes = `0${minutes}`
   let time
   if (hours === 0) time = `12:${minutes} AM`
   else if (hours > 13) time = `${hours - 12}:${minutes} PM`

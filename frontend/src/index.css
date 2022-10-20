@@ -1,4 +1,7 @@
 /* TODO Add site wide styles */
+* {
+  font-family: 'Roboto', sans-serif;
+}
 
 html, body {
   margin: 0;
@@ -12,15 +15,13 @@ body {
   grid-template-rows: 1fr auto;
 }
 
-* {
-  font-family: 'Roboto', sans-serif;
-}
 
 input, textarea {
   border-radius: 7.5px;
   border: solid 1px rgba(0, 0, 0, 0.2);
   padding: 10px;
   width: 100%;
+  margin: 0px;
 }
 
 .site-container {

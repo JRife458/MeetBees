@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Event.belongsToMany(models.User, { through: 'Attendance', foreignKey: 'eventId' })
-      Event.hasMany(models.EventImage, { foreignKey: 'eventId' })
-      Event.belongsTo(models.Group, { foreignKey: 'groupId'})
+      Event.hasMany(models.EventImage, { foreignKey: 'eventId', onDelete: 'cascade', hooks: true })
+      Event.belongsTo(models.Group, { foreignKey: 'groupId' })
       Event.belongsTo(models.Venue, { foreignKey: 'venueId'})
     }
   }
@@ -25,12 +25,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     venueId: {
       type: DataTypes.INTEGER,
-      onDelete: 'CASCADE'
+      onDelete: 'cascade'
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      onDelete: 'CASCADE'
+      references: {
+        model: 'Groups',
+        key: 'id'
+      },
+      onDelete: 'cascade'
     },
     name: {
       type: DataTypes.STRING,

@@ -42,10 +42,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.belongsToMany( models.Group, { through: 'Memberships', foreignKey: 'userId', as: 'UserMembers' })
-      User.hasMany( models.Group, { foreignKey: 'organizerId' })
+      User.hasMany( models.Group, { foreignKey: 'organizerId', onDelete: 'cascade', hooks: true })
       User.belongsToMany( models.Event, { through: 'Attendance', foreignKey: 'userId' })
-      User.hasMany( models.Attendance, {foreignKey: 'userId', as: 'Attendees' })
-      User.hasMany( models.Membership, {foreignKey: 'userId', as: 'Membership'})
+      User.hasMany( models.Attendance, {foreignKey: 'userId', as: 'Attendees', onDelete: 'cascade', hooks: true })
+      User.hasMany( models.Membership, {foreignKey: 'userId', as: 'Membership', onDelete: 'cascade', hooks: true})
     }
   };
 
