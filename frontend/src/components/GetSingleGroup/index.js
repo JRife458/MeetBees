@@ -35,9 +35,9 @@ function GetSingleGroup() {
     dispatch(getGroups())
   }, [dispatch])
 
-  const deleteGroup = (e) => {
+  const deleteGroup = async (e) => {
     e.preventDefault()
-    dispatch(groupDelete(groupId))
+    await dispatch(groupDelete(groupId))
     history.push('/groups');
   }
 

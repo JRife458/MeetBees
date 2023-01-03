@@ -173,6 +173,7 @@ const groupsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       delete newState.allGroups[action.groupId]
       newState.allGroups = Object.values(newState.allGroups).filter(id => id !==action.groupId)
+      console.log(newState)
       return newState;
     case ADD_GROUP_IMAGE:
       newState = Object.assign({}, state);
