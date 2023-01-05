@@ -68,7 +68,7 @@ const validateGroupCreate = [
       const {count} = await Membership.findAndCountAll({
         where: {
           groupId: groups[i].id,
-          status: 'member'
+          status: ['member', 'cohost']
         },
         raw: true
       })
@@ -474,7 +474,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
     return res.json(error)
   }
 
-  membership.status = 'member'
+  membership.status = req.body.status
 
   await membership.save()
   return res.json({

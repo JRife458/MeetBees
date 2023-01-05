@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getGroupById, getGroupEventsById, getGroups, groupDelete} from '../../store/groups'
+import {getGroupById, getGroupEventsById, getGroups, groupDelete, requestMembership} from '../../store/groups'
 import { useEffect } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import beeLogo from '../../assets/meetbees.png'
@@ -9,6 +9,7 @@ import './SingleGroup.css'
 import CreateEventFormModal from '../CreateEventModal';
 import AddGroupImageFormModal from '../AddGroupImageModal'
 import EventDetails from '../GetAllEvents/EventDetails';
+import PendingMembershipsModal from '../PendingMembershipsModal'
 
 
 function GetSingleGroup() {
@@ -25,9 +26,11 @@ function GetSingleGroup() {
   })
   let previewImage = group?.GroupImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
-  let privateString = group?.private === true ? 'Private' : 'Public'
-  let memberString = group?.numMembers === 1 ? 'member' : 'members'
-  let userMember = group?.Members[user.id] ? group.Members[user.id] : false
+  const privateString = group?.private === true ? 'Private' : 'Public'
+  const userMember = group?.Members[user.id] ? group.Members[user.id] : false
+  const pendingMember = group?.PendingMembers[user.id] ? true : false
+  const numMembers = group?.Members ? Object.keys(group.Members).length : 'loading'
+  const memberString = numMembers === 1 ? 'member' : 'members'
 
 
   useEffect(()=> {
@@ -40,6 +43,11 @@ function GetSingleGroup() {
     e.preventDefault()
     await dispatch(groupDelete(groupId))
     history.push('/groups');
+  }
+
+  const requestMembershipButton = async (e) => {
+    e.preventDefault()
+    await dispatch(requestMembership(groupId))
   }
 
   return (
@@ -69,7 +77,7 @@ function GetSingleGroup() {
             </div>
             <div className='specifics-lines'>
               <i className="fa-solid fa-user-group"></i>
-              <p>{`${group.numMembers} ${memberString}`} · {privateString} group</p>
+              <p>{`${numMembers} ${memberString}`} · {privateString} group</p>
             </div>
             <div className='specifics-lines'>
               <i className="fa-solid fa-user-large"></i>
@@ -77,16 +85,19 @@ function GetSingleGroup() {
             </div>
           </div>
         </div>
-        {group?.organizerId === user?.id && <div className='group-edit-buttons'>
+        {group?.Members[user.id] && <div className='group-edit-buttons'>
+          {group?.organizerId === user.id &&
           <NavLink to={`/groups/${groupId}/update`}>
             <button>Update Group</button>
-          </NavLink>
-          <button onClick={deleteGroup}>Delete Group</button>
+          </NavLink>}
+          {group?.organizerId === user.id && <button onClick={deleteGroup}>Delete Group</button>}
           <AddGroupImageFormModal groupId={groupId}/>
           <CreateEventFormModal venues={group.Venues}/>
+          {userMember?.status === "cohost" && <PendingMembershipsModal pending={group?.PendingMembers} />}
         </div>}
-        {!userMember && <button>Request Membership</button>}
-        {userMember.status === 'pending' && <span>Request Pending</span>}
+
+        {!userMember && !pendingMember && <button onClick={requestMembershipButton}>Request Membership</button>}
+        {pendingMember && <span>Request Pending</span>}
         <div className='single-group-details'>
           <div className='group-about'>
             <h4>What we're about:</h4>

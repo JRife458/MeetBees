@@ -6,6 +6,9 @@ const CREATE_GROUP = 'group/getGroupById'
 const DELETE_GROUP = 'group/deleteGroup'
 const ADD_GROUP_IMAGE = 'group/addImage'
 const GET_EVENTS = 'group/getEvents'
+const REQUEST_MEMBERSHIP = 'group/requestMembership'
+const APPROVE_MEMBERSHIP = 'group/approveMembership'
+const DENY_MEMBERSHIP = 'group/denyMembership'
 
 const populateGroups = (groups) => {
   return {
@@ -50,7 +53,26 @@ const getGroupEvents = (events) => {
   }
 }
 
+const requestMembershipAction = (membership) => {
+  return {
+    type: REQUEST_MEMBERSHIP,
+    membership
+  }
+}
 
+const approveMembershipAction = (membership) => {
+  return {
+    type: APPROVE_MEMBERSHIP,
+    membership
+  }
+}
+
+const denyMembershipAction = (memberId) => {
+  return {
+    type: DENY_MEMBERSHIP,
+    memberId
+  }
+}
 
 
 export const getGroups = () => async (dispatch) => {
@@ -125,7 +147,6 @@ export const groupDelete = (groupId) => async (dispatch) => {
 
 export const addGroupImage = (body, groupId) => async (dispatch) => {
   const {url, preview} = body
-  console.log('Fetch body', body)
   const response = await csrfFetch(`/api/groups/${groupId}/images`, {
     method: 'POST',
     body: JSON.stringify({
@@ -149,6 +170,42 @@ export const getGroupEventsById = (id) => async (dispatch) => {
   }
 };
 
+export const requestMembership = (groupId) => async (dispatch) => {
+  const membershipResponse = await csrfFetch(`/api/groups/${groupId}/membership`, {method: 'POST'})
+  if (membershipResponse.ok) {
+    const data = await membershipResponse.json();
+    dispatch(requestMembershipAction(data));
+    return data
+  }
+}
+
+export const approveMembership = (groupId, memberId) => async (dispatch) => {
+  const membershipResponse = await csrfFetch(`/api/groups/${groupId}/membership`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      memberId,
+      status: "member"
+    })
+  })
+  if (membershipResponse.ok) {
+    const data = await membershipResponse.json();
+    dispatch(approveMembershipAction(data));
+    return data
+  }
+}
+
+export const denyMembership = (groupId, memberId) => async (dispatch) => {
+  const membershipResponse = await csrfFetch(`/api/groups/${groupId}/membership`, {
+    method: 'DELETE',
+    body: JSON.stringify({memberId})
+  })
+  if (membershipResponse.ok) {
+    const data = await membershipResponse.json();
+    dispatch(denyMembershipAction(memberId));
+    return data
+  }
+}
+
 const initialState = {};
 
 const groupsReducer = (state = initialState, action) => {
@@ -164,17 +221,19 @@ const groupsReducer = (state = initialState, action) => {
     case GET_SINGLE_GROUP:
       newState = Object.assign({}, state);
       newState.singleGroup = action.singleGroup
-      let newMembersNormalized = {}
-      if (action.singleGroup.Members.length) {
-          action.singleGroup.Members.forEach(member => {
-            newMembersNormalized[member.id] = {
-            firstName: member.firstName,
-            lastName: member.lastName,
-            id: member.id,
-            status: member.Membership[0].status
-          }
-      })} else newMembersNormalized = null
-      newState.singleGroup.Members = newMembersNormalized
+      let membersNormalized = {}
+      let pendingMembersNormalized = {}
+      action.singleGroup.Members.forEach(member => {
+        const data = {
+          firstName: member.firstName,
+          lastName: member.lastName,
+          id: member.id,
+          status: member.Membership[0].status
+        }
+        data.status === "pending" ? pendingMembersNormalized[data.id] = data : membersNormalized[data.id] = data
+      })
+      newState.singleGroup.Members = membersNormalized
+      newState.singleGroup.PendingMembers = pendingMembersNormalized
       return newState;
     case CREATE_GROUP:
       newState = Object.assign({}, state);
@@ -197,6 +256,22 @@ const groupsReducer = (state = initialState, action) => {
       action.events.Events.forEach(event => {
         newState.singleGroupEvents[event.id] = event
       });
+      return newState
+    case REQUEST_MEMBERSHIP:
+      newState = Object.assign({}, state);
+      newState.singleGroup.PendingMembers[action.membership.memberId] = {
+        id: action.membership.memberId,
+        status: action.membership.status}
+      return newState
+    case APPROVE_MEMBERSHIP:
+      newState = Object.assign({}, state);
+      newState.singleGroup.Members[action.membership.memberId] = action.membership
+      delete newState.singleGroup.PendingMembers[action.membership.memberId]
+      return newState
+    case DENY_MEMBERSHIP:
+      newState = Object.assign({}, state);
+      console.log(action.memberId)
+      delete newState.singleGroup.PendingMembers[action.memberId]
       return newState
     default:
       return state;
