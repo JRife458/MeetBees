@@ -27,6 +27,7 @@ function GetSingleGroup() {
   if (!previewImage) previewImage = beeLogo
   let privateString = group?.private === true ? 'Private' : 'Public'
   let memberString = group?.numMembers === 1 ? 'member' : 'members'
+  let userMember = group?.Members[user.id] ? group.Members[user.id] : false
 
 
   useEffect(()=> {
@@ -84,6 +85,8 @@ function GetSingleGroup() {
           <AddGroupImageFormModal groupId={groupId}/>
           <CreateEventFormModal venues={group.Venues}/>
         </div>}
+        {!userMember && <button>Request Membership</button>}
+        {userMember.status === 'pending' && <span>Request Pending</span>}
         <div className='single-group-details'>
           <div className='group-about'>
             <h4>What we're about:</h4>

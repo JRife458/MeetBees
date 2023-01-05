@@ -164,6 +164,17 @@ const groupsReducer = (state = initialState, action) => {
     case GET_SINGLE_GROUP:
       newState = Object.assign({}, state);
       newState.singleGroup = action.singleGroup
+      let newMembersNormalized = {}
+      if (action.singleGroup.Members.length) {
+          action.singleGroup.Members.forEach(member => {
+            newMembersNormalized[member.id] = {
+            firstName: member.firstName,
+            lastName: member.lastName,
+            id: member.id,
+            status: member.Membership[0].status
+          }
+      })} else newMembersNormalized = null
+      newState.singleGroup.Members = newMembersNormalized
       return newState;
     case CREATE_GROUP:
       newState = Object.assign({}, state);
