@@ -270,7 +270,6 @@ const groupsReducer = (state = initialState, action) => {
       return newState
     case DENY_MEMBERSHIP:
       newState = Object.assign({}, state);
-      console.log(action.memberId)
       delete newState.singleGroup.PendingMembers[action.memberId]
       return newState
     default:

@@ -75,13 +75,18 @@ router.get('/', async (req, res) => {
 
 // Get event by Id
 router.get('/:eventId', async (req, res, next) => {
-  let event = await Event.findByPk(req.params.eventId, {raw: true})
+  const event = await Event.findByPk(req.params.eventId, {raw: true})
   if (!event) return next(noEventErr)
-  const {count} = await Attendance.findAndCountAll({
-    where: {eventId: event.id},
-    raw: true
+  const attendees = await User.findAll({
+    attributes: ['id', 'firstName', 'lastName'],
+    include: {model: Attendance,
+      as: 'Attendees',
+      where: {eventId: req.params.eventId},
+      attributes: ['status']
+    }
   })
-  event.numAttending = count
+  event.numAttending = attendees.length
+  event.Attendees = attendees
 
   event.Group = await Group.findByPk(event.groupId, {
     attributes: ['id', 'name', 'private', 'city', 'state']

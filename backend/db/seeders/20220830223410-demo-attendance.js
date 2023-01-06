@@ -66,6 +66,31 @@ module.exports = {
         eventId: 7,
         userId: 3,
         status: 'member'
+      },
+      {
+        eventId: 7,
+        userId: 1,
+        status: 'co-host'
+      },
+      {
+        eventId: 7,
+        userId: 2,
+        status: 'pending'
+      },
+      {
+        eventId: 7,
+        userId: 4,
+        status: 'pending'
+      },
+      {
+        eventId: 7,
+        userId: 5,
+        status: 'pending'
+      },
+      {
+        eventId: 7,
+        userId: 6,
+        status: 'pending'
       }
     ], {});
   },

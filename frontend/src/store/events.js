@@ -4,6 +4,9 @@ const GET_EVENTS = 'events/getAllEvents'
 const GET_SINGLE_EVENT = 'events/getEventById'
 const CREATE_EVENT = 'events/createEvent'
 const DELETE_EVENT = 'events/deleteEvent'
+const REQUEST_ATTENDANCE = 'events/requestAttendance'
+const APPROVE_ATTENDANCE = 'group/approveAttendance'
+const DENY_ATTENDANCE = 'group/denyAttendance'
 
 const populateEvents = (events) => {
   return {
@@ -30,6 +33,27 @@ const deleteEvent = (eventId) => {
   return {
     type: DELETE_EVENT,
     eventId
+  }
+}
+
+const requestAttendanceAction = (attendance) => {
+  return {
+    type: REQUEST_ATTENDANCE,
+    attendance
+  }
+}
+
+const approveAttendanceAction = (attendance) => {
+  return {
+    type: APPROVE_ATTENDANCE,
+    attendance
+  }
+}
+
+const denyAttendanceAction = (userId) => {
+  return {
+    type: DENY_ATTENDANCE,
+    userId
   }
 }
 
@@ -105,6 +129,42 @@ export const eventDestroyer = (eventId) => async (dispatch) => {
   }
 }
 
+export const requestAttendance = (eventId) => async (dispatch) => {
+  const attendanceResponse = await csrfFetch(`/api/events/${eventId}/attendance`, {method: 'POST'})
+  if (attendanceResponse.ok) {
+    const data = await attendanceResponse.json();
+    dispatch(requestAttendanceAction(data));
+    return data
+  }
+}
+
+export const approveAttendance = (eventId, userId) => async (dispatch) => {
+  const attendanceResponse = await csrfFetch(`/api/events/${eventId}/attendance`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      userId,
+      status: "member"
+    })
+  })
+  if (attendanceResponse.ok) {
+    const data = await attendanceResponse.json();
+    dispatch(approveAttendanceAction(data));
+    return data
+  }
+}
+
+export const denyAttendance = (eventId, userId) => async (dispatch) => {
+  const attendanceResponse = await csrfFetch(`/api/events/${eventId}/attendance`, {
+    method: 'DELETE',
+    body: JSON.stringify({userId})
+  })
+  if (attendanceResponse.ok) {
+    const data = await attendanceResponse.json();
+    dispatch(denyAttendanceAction(userId));
+    return data
+  }
+}
+
 const initialState = {};
 
 const eventsReducer = (state = initialState, action) => {
@@ -114,16 +174,29 @@ const eventsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       newState.allEvents = {}
       action.events.Events.forEach(event => {
-        event.startDate = normalizeDate(event.startDate)
-        event.endDate = normalizeDate(event.endDate)
         newState.allEvents[event.id] = event
+        newState.allEvents[event.id].startDate = normalizeDate(event.startDate)
+        newState.allEvents[event.id].endDate = normalizeDate(event.endDate)
       });
       return newState;
     case GET_SINGLE_EVENT:
       newState = Object.assign({}, state);
-      action.event.startDate = normalizeDate(action.event.startDate)
-      action.event.endDate = normalizeDate(action.event.endDate)
       newState.singleEvent = action.event
+      newState.singleEvent.startDate = normalizeDate(action.event.startDate)
+      newState.singleEvent.endDate = normalizeDate(action.event.endDate)
+      let attendeesNormalized = {}
+      let pendingNormalized = {}
+      action.event.Attendees.forEach(user => {
+        const data = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+          status: user.Attendees[0].status
+        }
+        data.status === "pending" ? pendingNormalized[data.id] = data : attendeesNormalized[data.id] = data
+      })
+      newState.singleEvent.Attendees = attendeesNormalized
+      newState.singleEvent.Requests = pendingNormalized
       return newState;
     case CREATE_EVENT:
       newState = Object.assign({}, state);
@@ -135,6 +208,12 @@ const eventsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       delete newState.allEvents[action.eventId]
       newState.allEvents = Object.values(newState.allEvents).filter(id => id !==action.eventId)
+    case REQUEST_ATTENDANCE:
+      newState = Object.assign({}, state);
+      newState.singleEvent.Requests[action.attendance.userId] = {
+        id: action.attendance.userId,
+        status: action.attendance.status}
+      return newState
     default:
       return state;
   }

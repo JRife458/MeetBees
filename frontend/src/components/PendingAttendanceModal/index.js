@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { Modal } from '../../context/Modal';
-import PendingMemberships from './PendingMemberships'
+import PendingAttendance from './PendingAttendance';
 
-function PendingMembershipsModal({pending}) {
+function PendingAttendanceModal({pending}) {
   const [showModal, setShowModal] = useState(false);
   const pendingArr = Object.values(pending)
   const pendingText = () => {
     switch (pendingArr.length) {
       case 0:
-        return 'No Membership Requests'
+        return 'No Attendance Requests'
       case 1:
-        return '1 Membership Request'
+        return '1 Attendance Request'
       default:
-        return `${pendingArr.length} Membership Requests`
+        return `${pendingArr.length} Attendance Requests`
   }
 
   }
 
   return (
     <>
-      <button className='pending-memberships-button' onClick={() => setShowModal(true)}>{(() => {
+      <button className='pending-attendance-button' onClick={() => setShowModal(true)}>{(() => {
         return pendingText()
       })()}</button>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <PendingMemberships
+          <PendingAttendance
           pendingArr = {pendingArr}
           onClose = {() => setShowModal(false)}
           />
@@ -34,4 +34,4 @@ function PendingMembershipsModal({pending}) {
   );
 }
 
-export default PendingMembershipsModal;
+export default PendingAttendanceModal;

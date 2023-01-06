@@ -16,8 +16,7 @@ function GetSingleGroup() {
   const {groupId} = useParams()
   const dispatch = useDispatch()
   const history = useHistory();
-  const group = useSelector(state => {
-    return state.groups.singleGroup})
+  const group = useSelector(state => state.groups.singleGroup)
   const user = useSelector(state => state.session.user)
   const events = useSelector(state => {
      if (state.groups.singleGroupEvents) {
@@ -26,9 +25,13 @@ function GetSingleGroup() {
   })
   let previewImage = group?.GroupImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
+
   const privateString = group?.private === true ? 'Private' : 'Public'
+
   const userMember = group?.Members[user.id] ? group.Members[user.id] : false
   const pendingMember = group?.PendingMembers[user.id] ? true : false
+  console.log(pendingMember)
+
   const numMembers = group?.Members ? Object.keys(group.Members).length : 'loading'
   const memberString = numMembers === 1 ? 'member' : 'members'
 
@@ -51,7 +54,7 @@ function GetSingleGroup() {
   }
 
   return (
-    <>
+    <div>
     <div className='links'>
     <NavLink className='link' to='/events'>
       <h3>Events</h3>
@@ -85,7 +88,9 @@ function GetSingleGroup() {
             </div>
           </div>
         </div>
-        {group?.Members[user.id] && <div className='group-edit-buttons'>
+
+        {group?.Members[user.id] &&
+        <div className='group-edit-buttons'>
           {group?.organizerId === user.id &&
           <NavLink to={`/groups/${groupId}/update`}>
             <button>Update Group</button>
@@ -98,6 +103,7 @@ function GetSingleGroup() {
 
         {!userMember && !pendingMember && <button onClick={requestMembershipButton}>Request Membership</button>}
         {pendingMember && <span>Request Pending</span>}
+
         <div className='single-group-details'>
           <div className='group-about'>
             <h4>What we're about:</h4>
@@ -124,7 +130,7 @@ function GetSingleGroup() {
         </div>
       </div>
     }
-    </>
+    </div>
   )
 }
 

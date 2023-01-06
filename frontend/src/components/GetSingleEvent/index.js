@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory, useParams } from "react-router-dom";
-import { eventDestroyer, getEventById } from "../../store/events";
+import { eventDestroyer, getEventById, getEvents, requestAttendance } from "../../store/events";
+import PendingAttendanceModal from "../PendingAttendanceModal";
 import beeLogo from '../../assets/meetbees.png'
 import './SingleEvent.css'
 
@@ -12,21 +14,41 @@ function GetSingleEvent() {
   const history = useHistory()
   const event = useSelector(state => state.events.singleEvent)
   const user = useSelector(state => state.session.user)
+  const allEvents = useSelector(state => state.events.allEvents)
   let previewImage = event?.EventImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
 
+  const userAttendance = event?.Attendees[user.id] ? event.Attendees[user.id] : false
+  const pendingRequest = event?.Requests[user.id] ? true : false
+  console.log(pendingRequest)
+  // const numAttending = event?.Attendees ? Object.keys(event.Attendees).length: 'loading'
+
   useEffect(() => {
     dispatch(getEventById(eventId))
+    dispatch(getEvents())
   }, [dispatch])
 
-  const deleteEvent = (e) => {
+  const deleteEvent = async (e) => {
     e.preventDefault()
-    dispatch(eventDestroyer(eventId))
+    await dispatch(eventDestroyer(eventId))
     history.push('/events');
+  }
+
+  const requestAttendanceButton = async (e) => {
+    e.preventDefault()
+    await dispatch(requestAttendance(eventId))
   }
 
   return (
     <div>
+      <div className='links'>
+        <NavLink className='link active' to='/events'>
+          <h3>Events</h3>
+        </NavLink>
+        <NavLink className='link' to='/groups'>
+          <h3>Groups</h3>
+        </NavLink>
+      </div>
       {!event && <span>Event not found</span>}
       {event &&
       <div className="single-event">
@@ -73,7 +95,12 @@ function GetSingleEvent() {
           </div>
           </div>
           <div className="single-event-details">
-            {user && <button className="delete-event-button" onClick={deleteEvent}>Delete Event</button>}
+            {userAttendance.status === 'co-host' && <button className="delete-event-button" onClick={deleteEvent}>Delete Event</button>}
+
+            {!userAttendance && !pendingRequest && <button onClick={requestAttendanceButton}>Request to Attend Event</button>}
+            {pendingRequest && <span>Request Pending</span>}
+
+            {userAttendance.status === "co-host" && <PendingAttendanceModal pending={event.Requests} />}
             <h2>Details</h2>
             <p>{event?.description}</p>
           </div>
