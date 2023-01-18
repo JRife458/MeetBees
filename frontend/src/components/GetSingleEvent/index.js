@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory, useParams } from "react-router-dom";
-import { eventDestroyer, getEventById, getEvents, requestAttendance } from "../../store/events";
+import { eventDestroyer, getEventById, requestAttendance } from "../../store/events";
 import PendingAttendanceModal from "../PendingAttendanceModal";
 import beeLogo from '../../assets/meetbees.png'
 import './SingleEvent.css'
@@ -14,19 +14,15 @@ function GetSingleEvent() {
   const history = useHistory()
   const event = useSelector(state => state.events.singleEvent)
   const user = useSelector(state => state.session.user)
-  const allEvents = useSelector(state => state.events.allEvents)
   let previewImage = event?.EventImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
 
-  const userAttendance = event?.Attendees[user.id] ? event.Attendees[user.id] : false
-  const pendingRequest = event?.Requests[user.id] ? true : false
-  console.log(pendingRequest)
-  // const numAttending = event?.Attendees ? Object.keys(event.Attendees).length: 'loading'
+  const userAttendance = event?.Attendees[user?.id] ? event.Attendees[user?.id] : false
+  const pendingRequest = event?.Requests[user?.id] ? true : false
 
   useEffect(() => {
     dispatch(getEventById(eventId))
-    dispatch(getEvents())
-  }, [dispatch])
+  }, [dispatch, eventId])
 
   const deleteEvent = async (e) => {
     e.preventDefault()
@@ -59,7 +55,7 @@ function GetSingleEvent() {
         <div className="event-container">
           <div className="event-image-info">
             <div className="event-preview-image-container">
-              <img className="event-preview-image" src={previewImage}></img>
+              <img className="event-preview-image" alt="event" src={previewImage}></img>
             </div>
 
           <div className="other-event-info">

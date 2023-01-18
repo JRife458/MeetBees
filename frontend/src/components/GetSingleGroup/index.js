@@ -30,7 +30,6 @@ function GetSingleGroup() {
 
   const userMember = group?.Members[user.id] ? group.Members[user.id] : false
   const pendingMember = group?.PendingMembers[user.id] ? true : false
-  console.log(pendingMember)
 
   const numMembers = group?.Members ? Object.keys(group.Members).length : 'loading'
   const memberString = numMembers === 1 ? 'member' : 'members'

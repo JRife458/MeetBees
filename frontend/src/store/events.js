@@ -168,25 +168,26 @@ export const denyAttendance = (eventId, userId) => async (dispatch) => {
 const initialState = {};
 
 const eventsReducer = (state = initialState, action) => {
-  let newState;
+  let newState = {};
   switch (action.type) {
     case GET_EVENTS:
       newState = Object.assign({}, state);
-      newState.allEvents = {}
+      const events = {}
       action.events.Events.forEach(event => {
-        newState.allEvents[event.id] = event
-        newState.allEvents[event.id].startDate = normalizeDate(event.startDate)
-        newState.allEvents[event.id].endDate = normalizeDate(event.endDate)
+        events[event.id] = Object.assign({}, event);
+        events[event.id].startDate = normalizeDate(event.startDate)
+        events[event.id].endDate = normalizeDate(event.endDate)
       });
+      newState.allEvents = events
       return newState;
     case GET_SINGLE_EVENT:
       newState = Object.assign({}, state);
-      newState.singleEvent = action.event
-      newState.singleEvent.startDate = normalizeDate(action.event.startDate)
-      newState.singleEvent.endDate = normalizeDate(action.event.endDate)
+      const newEvent = action.event
+      newEvent.startDate = normalizeDate(newEvent.startDate)
+      newEvent.endDate = normalizeDate(newEvent.endDate)
       let attendeesNormalized = {}
       let pendingNormalized = {}
-      action.event.Attendees.forEach(user => {
+      newEvent.Attendees.forEach(user => {
         const data = {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -195,8 +196,9 @@ const eventsReducer = (state = initialState, action) => {
         }
         data.status === "pending" ? pendingNormalized[data.id] = data : attendeesNormalized[data.id] = data
       })
-      newState.singleEvent.Attendees = attendeesNormalized
-      newState.singleEvent.Requests = pendingNormalized
+      newEvent.Attendees = attendeesNormalized
+      newEvent.Requests = pendingNormalized
+      newState.singleEvent = newEvent
       return newState;
     case CREATE_EVENT:
       newState = Object.assign({}, state);
@@ -208,6 +210,7 @@ const eventsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       delete newState.allEvents[action.eventId]
       newState.allEvents = Object.values(newState.allEvents).filter(id => id !==action.eventId)
+      return newState
     case REQUEST_ATTENDANCE:
       newState = Object.assign({}, state);
       newState.singleEvent.Requests[action.attendance.userId] = {
