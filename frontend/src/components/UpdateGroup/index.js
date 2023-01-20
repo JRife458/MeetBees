@@ -50,7 +50,7 @@ function UpdateGroup() {
         privateBoolean: privateBoolean }
       dispatch(groupUpdater(body, group.id))
 
-      history.push(`/groups/${group.id}`);
+      history.push(`/groups/${groupId}`);
     };
 
   return (

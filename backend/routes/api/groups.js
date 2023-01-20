@@ -66,7 +66,10 @@ const validateGroupCreate = [
       if (groups[i].private === 0) groups[i].private = false
       if (groups[i].private === 1) groups[i].private = true
       const {count} = await Membership.findAndCountAll({
-        where: {groupId: groups[i].id},
+        where: {
+          groupId: groups[i].id,
+          status: ['member', 'cohost']
+        },
         raw: true
       })
       groups[i].numMembers = count
@@ -96,7 +99,10 @@ router.get('/current', async (req, res) => {
     let group = await Group.findByPk(groupId, {raw: true})
 
     const {count} = await Membership.findAndCountAll({
-      where: {groupId: groupId},
+      where: {
+        groupId: groupId,
+        status: 'member'
+      },
       raw: true
     })
     group.numMembers = count
@@ -123,10 +129,6 @@ router.get('/:groupId', async (req, res, next) => {
 
   if (group.private === 1) group.private = true
   else if (group.private === 0) group.private = false
-  const {count} = await Membership.findAndCountAll({
-    where: {groupId: group.id},
-    raw: true
-  })
   let user = await User.findByPk(group.organizerId)
   let organizer = {
     'id': group.organizerId,
@@ -141,7 +143,16 @@ router.get('/:groupId', async (req, res, next) => {
     where: {groupId: group.id},
     attributes: {exclude: ['createdAt', 'updatedAt']}
   })
-  group.numMembers = count
+  let members = await User.findAll({
+    attributes: ['id', 'firstName', 'lastName'],
+    include: {model: Membership,
+      as: 'Membership',
+      where: {groupId: req.params.groupId},
+      attributes: ['status']
+    }
+  })
+  group.numMembers = members.length
+  group.Members = members
   group.GroupImages = images
   group.Organizer = organizer
   group.Venues = venues
@@ -396,7 +407,7 @@ router.post('/:groupId/events', async (req, res, next) => {
   return res.json(newEvent)
 })
 
-//Get members of group
+// Get members of group
 router.get('/:groupId/members', async (req, res, next) => {
   const group = await Group.findByPk(req.params.groupId)
   if (!group) return next(noGroupErr)
@@ -457,13 +468,13 @@ router.put('/:groupId/membership', async (req, res, next) => {
   if (!membership) {
     res.status(404)
     const error = {
-      "message": "Membership between the user and the group does not exits",
+      "message": "Membership between the user and the group does not exit",
       "statusCode": 404
     }
     return res.json(error)
   }
 
-  membership.status = 'member'
+  membership.status = req.body.status
 
   await membership.save()
   return res.json({

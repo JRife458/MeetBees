@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getGroupById, getGroupEventsById, getGroups, groupDelete} from '../../store/groups'
-import { useEffect } from 'react';
+import {getGroupById, getGroupEventsById, getGroups, groupDelete, requestMembership} from '../../store/groups'
+import { denyMembership } from '../../store/groups';
+import { useEffect, useState } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import beeLogo from '../../assets/meetbees.png'
 import './SingleGroup.css'
@@ -9,24 +10,31 @@ import './SingleGroup.css'
 import CreateEventFormModal from '../CreateEventModal';
 import AddGroupImageFormModal from '../AddGroupImageModal'
 import EventDetails from '../GetAllEvents/EventDetails';
+import PendingMembershipsModal from '../PendingMembershipsModal'
 
 
 function GetSingleGroup() {
   const {groupId} = useParams()
   const dispatch = useDispatch()
   const history = useHistory();
-  const group = useSelector(state => {
-    return state.groups.singleGroup})
+  const group = useSelector(state => state.groups.singleGroup)
   const user = useSelector(state => state.session.user)
   const events = useSelector(state => {
      if (state.groups.singleGroupEvents) {
       return Object.values(state.groups.singleGroupEvents)
       }
   })
+  const [requestButtonText, setRequestButtonText] = useState('Request Pending')
   let previewImage = group?.GroupImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
-  let privateString = group?.private === true ? 'Private' : 'Public'
-  let memberString = group?.numMembers === 1 ? 'member' : 'members'
+
+  const privateString = group?.private === true ? 'Private' : 'Public'
+
+  const userMember = group?.Members[user.id] ? group.Members[user.id] : false
+  const pendingMember = group?.PendingMembers[user.id] ? true : false
+
+  const numMembers = group?.Members ? Object.keys(group.Members).length : 'loading'
+  const memberString = numMembers === 1 ? 'member' : 'members'
 
 
   useEffect(()=> {
@@ -35,14 +43,25 @@ function GetSingleGroup() {
     dispatch(getGroups())
   }, [dispatch])
 
-  const deleteGroup = (e) => {
+  const deleteGroup = async (e) => {
     e.preventDefault()
-    dispatch(groupDelete(groupId))
+    await dispatch(groupDelete(groupId))
     history.push('/groups');
   }
 
+  const requestMembershipButton = async (e) => {
+    e.preventDefault()
+    await dispatch(requestMembership(groupId))
+  }
+
+  const deleteRequestButton = async (e) => {
+    e.preventDefault()
+    await dispatch(denyMembership(groupId, user.id))
+    setRequestButtonText('Request Pending')
+  }
+
   return (
-    <>
+    <div>
     <div className='links'>
     <NavLink className='link' to='/events'>
       <h3>Events</h3>
@@ -68,7 +87,7 @@ function GetSingleGroup() {
             </div>
             <div className='specifics-lines'>
               <i className="fa-solid fa-user-group"></i>
-              <p>{`${group.numMembers} ${memberString}`} · {privateString} group</p>
+              <p>{`${numMembers} ${memberString}`} · {privateString} group</p>
             </div>
             <div className='specifics-lines'>
               <i className="fa-solid fa-user-large"></i>
@@ -76,14 +95,28 @@ function GetSingleGroup() {
             </div>
           </div>
         </div>
-        {group?.organizerId === user?.id && <div className='group-edit-buttons'>
+
+        {group?.Members[user.id] &&
+        <div className='group-edit-buttons'>
+          {group?.organizerId === user.id &&
           <NavLink to={`/groups/${groupId}/update`}>
             <button>Update Group</button>
-          </NavLink>
-          <button onClick={deleteGroup}>Delete Group</button>
+          </NavLink>}
+          {group?.organizerId === user.id && <button onClick={deleteGroup}>Delete Group</button>}
           <AddGroupImageFormModal groupId={groupId}/>
           <CreateEventFormModal venues={group.Venues}/>
+          {userMember?.status === "cohost" && <PendingMembershipsModal pending={group?.PendingMembers} />}
         </div>}
+        <div className='group-edit-buttons'>
+        {!userMember && !pendingMember && <button onClick={requestMembershipButton}>Request Membership</button>}
+        {pendingMember && <button
+            onClick={deleteRequestButton}
+            className="pending-request-button"
+            onMouseEnter={() => setRequestButtonText('Delete Request?')}
+            onMouseLeave={() => setRequestButtonText("Request Pending")}
+            >{requestButtonText}</button>}
+        </div>
+
         <div className='single-group-details'>
           <div className='group-about'>
             <h4>What we're about:</h4>
@@ -110,7 +143,7 @@ function GetSingleGroup() {
         </div>
       </div>
     }
-    </>
+    </div>
   )
 }
 

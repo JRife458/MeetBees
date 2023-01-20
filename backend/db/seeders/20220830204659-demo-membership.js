@@ -67,6 +67,56 @@ module.exports = {
         groupId: 8,
         status: 'member'
        },
+       {
+        userId: 7,
+        groupId: 1,
+        status: 'cohost'
+       },
+       {
+        userId: 4,
+        groupId: 4,
+        status: 'cohost'
+       },
+       {
+        userId: 5,
+        groupId: 5,
+        status: 'cohost'
+       },
+       {
+        userId: 6,
+        groupId: 6,
+        status: 'cohost'
+       },
+       {
+        userId: 1,
+        groupId: 7,
+        status: 'cohost'
+       },
+       {
+        userId: 3,
+        groupId: 7,
+        status: 'pending'
+       },
+       {
+        userId: 4,
+        groupId: 7,
+        status: 'pending'
+       },
+       {
+        userId: 5,
+        groupId: 7,
+        status: 'pending'
+       },
+       {
+        userId: 6,
+        groupId: 7,
+        status: 'pending'
+       },
+       {
+        userId: 7,
+        groupId: 7,
+        status: 'pending'
+       },
 
       ], {});
   },
