@@ -30,8 +30,8 @@ function GetSingleGroup() {
 
   const privateString = group?.private === true ? 'Private' : 'Public'
 
-  const userMember = group?.Members[user.id] ? group.Members[user.id] : false
-  const pendingMember = group?.PendingMembers[user.id] ? true : false
+  const userMember = group?.Members[user?.id] ? group.Members[user?.id] : false
+  const pendingMember = group?.PendingMembers[user?.id] ? true : false
 
   const numMembers = group?.Members ? Object.keys(group.Members).length : 'loading'
   const memberString = numMembers === 1 ? 'member' : 'members'
@@ -96,19 +96,19 @@ function GetSingleGroup() {
           </div>
         </div>
 
-        {group?.Members[user.id] &&
+        {group?.Members[user?.id] &&
         <div className='group-edit-buttons'>
-          {group?.organizerId === user.id &&
+          {group?.organizerId === user?.id &&
           <NavLink to={`/groups/${groupId}/update`}>
             <button>Update Group</button>
           </NavLink>}
-          {group?.organizerId === user.id && <button onClick={deleteGroup}>Delete Group</button>}
+          {group?.organizerId === user?.id && <button onClick={deleteGroup}>Delete Group</button>}
           <AddGroupImageFormModal groupId={groupId}/>
           <CreateEventFormModal venues={group.Venues}/>
           {userMember?.status === "cohost" && <PendingMembershipsModal pending={group?.PendingMembers} />}
         </div>}
         <div className='group-edit-buttons'>
-        {!userMember && !pendingMember && <button onClick={requestMembershipButton}>Request Membership</button>}
+        {!userMember && !pendingMember && user && <button onClick={requestMembershipButton}>Request Membership</button>}
         {pendingMember && <button
             onClick={deleteRequestButton}
             className="pending-request-button"
