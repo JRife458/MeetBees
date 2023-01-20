@@ -217,6 +217,15 @@ const eventsReducer = (state = initialState, action) => {
         id: action.attendance.userId,
         status: action.attendance.status}
       return newState
+    case APPROVE_ATTENDANCE:
+      newState = Object.assign({}, state);
+      newState.singleEvent.Attendees[action.attendance.userId] = action.attendance
+      delete newState.singleEvent.Requests[action.attendance.userId]
+      return newState
+    case DENY_ATTENDANCE:
+      newState = Object.assign({}, state);
+      delete newState.singleEvent.Requests[action.userId]
+      return newState
     default:
       return state;
   }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {getGroupById, getGroupEventsById, getGroups, groupDelete, requestMembership} from '../../store/groups'
-import { useEffect } from 'react';
+import { denyMembership } from '../../store/groups';
+import { useEffect, useState } from 'react';
 import {NavLink, useParams, useHistory} from 'react-router-dom'
 import beeLogo from '../../assets/meetbees.png'
 import './SingleGroup.css'
@@ -23,6 +24,7 @@ function GetSingleGroup() {
       return Object.values(state.groups.singleGroupEvents)
       }
   })
+  const [requestButtonText, setRequestButtonText] = useState('Request Pending')
   let previewImage = group?.GroupImages.filter(e => e.preview = true)[0]?.url
   if (!previewImage) previewImage = beeLogo
 
@@ -50,6 +52,12 @@ function GetSingleGroup() {
   const requestMembershipButton = async (e) => {
     e.preventDefault()
     await dispatch(requestMembership(groupId))
+  }
+
+  const deleteRequestButton = async (e) => {
+    e.preventDefault()
+    await dispatch(denyMembership(groupId, user.id))
+    setRequestButtonText('Request Pending')
   }
 
   return (
@@ -99,9 +107,15 @@ function GetSingleGroup() {
           <CreateEventFormModal venues={group.Venues}/>
           {userMember?.status === "cohost" && <PendingMembershipsModal pending={group?.PendingMembers} />}
         </div>}
-
+        <div className='group-edit-buttons'>
         {!userMember && !pendingMember && <button onClick={requestMembershipButton}>Request Membership</button>}
-        {pendingMember && <span>Request Pending</span>}
+        {pendingMember && <button
+            onClick={deleteRequestButton}
+            className="pending-request-button"
+            onMouseEnter={() => setRequestButtonText('Delete Request?')}
+            onMouseLeave={() => setRequestButtonText("Request Pending")}
+            >{requestButtonText}</button>}
+        </div>
 
         <div className='single-group-details'>
           <div className='group-about'>

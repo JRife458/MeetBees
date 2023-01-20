@@ -1,7 +1,7 @@
 import ApproveAttendanceButton from "./ApproveAttendance"
 import DenyAttendanceButton from "./DenyAttendance"
 
-function PendingAttendance({pendingArr}) {
+function PendingAttendance({updateSwitch, pendingArr}) {
 
   return (
     <div className='pending-user-container'>
@@ -10,8 +10,8 @@ function PendingAttendance({pendingArr}) {
       {pendingArr.map(user => (
         <div className='pending-user' key={user.id}>
           <p>{user.firstName} {user.lastName}</p>
-          <ApproveAttendanceButton userId={user.id}/>
-          <DenyAttendanceButton userId={user.id}/>
+          <ApproveAttendanceButton updateSwitch={updateSwitch} userId={user.id}/>
+          <DenyAttendanceButton updateSwitch={updateSwitch} userId={user.id}/>
         </div>
       ))}
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal } from '../../context/Modal';
 import PendingAttendance from './PendingAttendance';
 
-function PendingAttendanceModal({pending}) {
+function PendingAttendanceModal({updateSwitch, pending}) {
   const [showModal, setShowModal] = useState(false);
   const pendingArr = Object.values(pending)
   const pendingText = () => {
@@ -25,6 +25,7 @@ function PendingAttendanceModal({pending}) {
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <PendingAttendance
+          updateSwitch = {updateSwitch}
           pendingArr = {pendingArr}
           onClose = {() => setShowModal(false)}
           />
