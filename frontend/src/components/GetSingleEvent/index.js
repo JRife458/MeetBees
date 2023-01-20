@@ -108,7 +108,7 @@ function GetSingleEvent() {
             {userAttendance.status === 'co-host' && <button className="delete-event-button" onClick={deleteEvent}>Delete Event</button>}
             {userAttendance.status === "co-host" && <PendingAttendanceModal updateSwitch={updateSwitch} pending={event.Requests} />}
 
-            {!userAttendance && !pendingRequest && <button onClick={requestAttendanceButton}>Request to Attend Event</button>}
+            {!userAttendance && !pendingRequest && user && <button onClick={requestAttendanceButton}>Request to Attend Event</button>}
             {pendingRequest && <button
             onClick={deleteRequestButton}
             className="pending-request-button"
