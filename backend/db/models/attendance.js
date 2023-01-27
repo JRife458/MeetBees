@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       onDelete: "CASCADE"
     },
-    status: DataTypes.ENUM('member', 'waitlist', 'pending')
+    status: DataTypes.ENUM('member', 'co-host', 'pending')
   }, {
     sequelize,
     modelName: 'Attendance',
