@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.ENUM('member', 'waitlist', 'pending')
+        type: Sequelize.ENUM('member', 'co-host', 'pending')
       },
       createdAt: {
         allowNull: false,
