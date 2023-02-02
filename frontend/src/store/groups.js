@@ -1,4 +1,5 @@
 import { csrfFetch } from './csrf';
+import { normalizeDate } from './events';
 
 const GET_GROUPS = 'groups/getGroups';
 const GET_SINGLE_GROUP = 'group/getGroupById'
@@ -254,6 +255,8 @@ const groupsReducer = (state = initialState, action) => {
       newState = Object.assign({}, state);
       newState.singleGroupEvents = {}
       action.events.Events.forEach(event => {
+        event.startDate = normalizeDate(event.startDate)
+        event.endDate = normalizeDate(event.endDate)
         newState.singleGroupEvents[event.id] = event
       });
       return newState
