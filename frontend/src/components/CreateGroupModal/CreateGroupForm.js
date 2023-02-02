@@ -1,6 +1,6 @@
 import { useEffect, useState, } from 'react';
 import { useHistory } from 'react-router-dom';
-import {groupCreator, getGroups} from '../../store/groups'
+import {groupCreator} from '../../store/groups'
 import { useDispatch, useSelector } from 'react-redux';
 
 function CreateGroup() {
@@ -13,12 +13,12 @@ function CreateGroup() {
   const [state, setState] = useState('');
   const [privateBoolean, setPrivate] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
-  const groups = useSelector(state => Object.values(state.groups.allGroups))
+  // const groups = useSelector(state => Object.values(state.groups.allGroups))
   const userId = useSelector(state => state.session.user.id)
 
-  useEffect(()=> {
-    dispatch(getGroups())
-  }, [dispatch])
+  // useEffect(()=> {
+  //   dispatch(getGroups())
+  // }, [dispatch])
 
   useEffect(() => {
     const errors = [];

@@ -10,7 +10,7 @@ import './SingleGroup.css'
 import CreateEventFormModal from '../CreateEventModal';
 import AddGroupImageFormModal from '../AddGroupImageModal'
 import EventDetails from '../GetAllEvents/EventDetails';
-import PendingMembershipsModal from '../PendingMembershipsModal'
+import PendingMembershipsModal from '../PendingMembershipsModal';
 
 
 function GetSingleGroup() {
@@ -41,7 +41,7 @@ function GetSingleGroup() {
     dispatch(getGroupById(groupId))
     dispatch(getGroupEventsById(groupId))
     dispatch(getGroups())
-  }, [dispatch])
+  }, [dispatch, groupId])
 
   const deleteGroup = async (e) => {
     e.preventDefault()
@@ -75,7 +75,7 @@ function GetSingleGroup() {
       <div className='groupInfo'>
         <div className='group-title-card'>
           <div className='group-preview-image-container'>
-            <img className='group-preview-image' src={previewImage}></img>
+            <img className='group-preview-image' alt='group-preview' src={previewImage}></img>
           </div>
           <div className='group-specifics'>
             <div className='specifics-lines'>
@@ -127,7 +127,7 @@ function GetSingleGroup() {
             <div className='group-images'>
               {group?.GroupImages.map(image => (
                 <div className='group-image-container' key={image.id}>
-                  <img className='group-image' src={image.url}></img>
+                  <img className='group-image' alt='group' src={image.url}></img>
                 </div>
               ))}
               </div>

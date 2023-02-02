@@ -22,7 +22,7 @@ function UpdateGroup() {
   useEffect(()=> {
     dispatch(getGroups())
     dispatch(getGroupById(groupId))
-  }, [dispatch])
+  }, [dispatch, groupId])
 
   useEffect(() => {
     const errors = [];
@@ -37,7 +37,7 @@ function UpdateGroup() {
     if (!city?.length) errors.push('City required')
     if (!state?.length) errors.push('State required')
     setValidationErrors(errors)
-    }, [name, about, city, state]);
+    }, [name, about, city, state, group?.name, groups]);
 
     const submitHandler = (e) => {
       e.preventDefault();

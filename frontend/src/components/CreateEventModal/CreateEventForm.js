@@ -1,7 +1,7 @@
 import { useEffect, useState, } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { eventCreator, getEvents} from '../../store/events'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 function CreateEvent({venues}) {
   const dispatch = useDispatch()
