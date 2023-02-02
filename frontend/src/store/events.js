@@ -57,7 +57,7 @@ const denyAttendanceAction = (userId) => {
   }
 }
 
-const normalizeDate = (date) => {
+export const normalizeDate = (date) => {
   const newDate = new Date(date)
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['January', 'Feburary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
