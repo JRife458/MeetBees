@@ -6,7 +6,11 @@ export class NavigationPage {
     this.page = page;
   }
 
-  async goto() {
-    await this.page.goto("http://localhost:3000/");
+  async groupsPage() {
+    await this.page.getByText("Find Groups").click();
+  }
+
+  async eventsPage() {
+    await this.page.getByText("Find Events").click();
   }
 }
