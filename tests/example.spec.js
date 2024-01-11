@@ -1,9 +1,10 @@
 // @ts-check
 const { test, expect } = require("@playwright/test");
 import { NavigationPage } from "../page-objects/navigationPage";
+import { PageManager } from "../page-objects/pageManager";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("http://localhost:3000/");
+  await page.goto("/");
 });
 
 test("has title", async ({ page }) => {
