@@ -13,4 +13,12 @@ export class NavigationPage {
   async eventsPage() {
     await this.page.getByText("Find Events").click();
   }
+
+  async signupPage() {
+    await this.page.getByText("Sign Up").click();
+  }
+
+  async loginModal() {
+    await this.page.getByText("Log In").click();
+  }
 }

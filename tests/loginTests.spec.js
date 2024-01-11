@@ -7,14 +7,16 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("Login Test", async ({ page }) => {
-  const loginButton = await page.getByText("Log In");
-  loginButton.click();
+test("Login Successful Test", async ({ page }) => {
+  const navigateTo = new NavigationPage(page);
+  await navigateTo.loginModal();
 
-  const emailInput = await page.getByLabel("Username or Email");
-  const passwordInput = await page.getByLabel("Password");
-  const loginFormButtons = await page.locator(".login-form-buttons");
-  const submitButton = await loginFormButtons.getByText("Log In");
+  const loginForm = await page.locator(".login-form");
+  const emailInput = await loginForm.getByLabel("Username or Email");
+  const passwordInput = await loginForm.getByLabel("Password");
+  const submitButton = await loginForm.getByRole("button", {
+    name: "Log In",
+  });
 
   await emailInput.fill("demo@user.io");
   await passwordInput.fill("password");
@@ -25,9 +27,29 @@ test("Login Test", async ({ page }) => {
   );
 });
 
+test("Login Failed Test", async ({ page }) => {
+  const navigateTo = new NavigationPage(page);
+  await navigateTo.loginModal();
+
+  const loginForm = await page.locator(".login-form");
+  const emailInput = await loginForm.getByLabel("Username or Email");
+  const passwordInput = await loginForm.getByLabel("Password");
+  const submitButton = await loginForm.getByRole("button", {
+    name: "Log In",
+  });
+
+  await emailInput.fill("wrongEmail");
+  await passwordInput.fill("wrongPassword");
+  await submitButton.click();
+
+  await expect(await loginForm.getByRole("listitem")).toContainText(
+    "The provided credentials were invalid."
+  );
+});
+
 test("Sign Up Test", async ({ page }) => {
-  const signUpButton = await page.getByText("Sign Up");
-  await signUpButton.click();
+  const navigateTo = new NavigationPage(page);
+  await navigateTo.signupPage();
 
   const signUpForm = await page.locator(".signup-form");
   const emailInput = await signUpForm.getByLabel("Email");
