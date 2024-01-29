@@ -23,7 +23,7 @@
     "start:frontend": "npm start --prefix frontend",
     "tests-dev": "npx playwright test --project=dev-chrome --project=dev-firefox",
     "tests-production": "npx playwright test --project=production-chrome --project=production-firefox",
-    "test:dev:all": "start-test start:backend 3000 start:frontend 8080 tests-dev"
+    "test:dev:all": "start-test start:backend 3000 start:frontend 8000 tests-dev"
   },
   "repository": {
     "type": "git",
