@@ -9,7 +9,8 @@
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@playwright/test": "^1.40.1",
-    "@types/node": "^20.10.5"
+    "@types/node": "^20.10.5",
+    "start-server-and-test": "^2.0.3"
   },
   "scripts": {
     "heroku-postbuild": "npm run build --prefix frontend",
@@ -18,9 +19,11 @@
     "dev:frontend": "npm install --prefix frontend start",
     "sequelize": "npm run --prefix backend sequelize",
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
-    "start": "npm start --prefix backend",
+    "start:backend": "npm start --prefix backend",
+    "start:frontend": "npm start --prefix frontend",
     "tests-dev": "npx playwright test --project=dev-chrome --project=dev-firefox",
-    "tests-production": "npx playwright test --project=production-chrome --project=production-firefox"
+    "tests-production": "npx playwright test --project=production-chrome --project=production-firefox",
+    "test:dev:all": "start-test start:backend 3000 start:frontend 8080 tests-dev"
   },
   "repository": {
     "type": "git",
