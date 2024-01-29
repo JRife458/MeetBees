@@ -47,7 +47,7 @@ test("Login Failed Test", async ({ page }) => {
   );
 });
 
-test("Sign Up Test", async ({ page }) => {
+test("Sign Up Successful Test", async ({ page }) => {
   const navigateTo = new NavigationPage(page);
   await navigateTo.signupPage();
 
@@ -79,4 +79,28 @@ test("Sign Up Test", async ({ page }) => {
   await expect(await page.locator(".splash-message")).toContainText(
     randomFirstName
   );
+});
+
+test("Sign Up Failed Test", async ({ page }) => {
+  const navigateTo = new NavigationPage(page);
+  await navigateTo.signupPage();
+
+  const signUpForm = await page.locator(".signup-form");
+  const emailInput = await signUpForm.getByLabel("Email");
+  const usernameInput = await signUpForm.getByLabel("Username");
+  const firstNameInput = await signUpForm.getByLabel("First Name");
+  const lastNameInput = await signUpForm.getByLabel("Last Name");
+  const passwordInput = await signUpForm.getByLabel("Password", {
+    exact: true,
+  });
+  const confirmPasswordInput = await signUpForm.getByLabel("Confirm Password");
+  const submitButton = await signUpForm.getByRole("button");
+
+  await emailInput.fill("a");
+  await usernameInput.fill("a");
+  await firstNameInput.fill("a");
+  await lastNameInput.fill("a");
+  await passwordInput.fill("a");
+  await confirmPasswordInput.fill("a");
+  await submitButton.click();
 });

@@ -1,20 +1,20 @@
-import { useEffect, useState, } from 'react';
-import { useHistory } from 'react-router-dom';
-import {groupCreator} from '../../store/groups'
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { groupCreator } from "../../store/groups";
+import { useDispatch, useSelector } from "react-redux";
 
 function CreateGroup() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const history = useHistory();
-  const [name, setName] = useState('');
-  const [about, setAbout] = useState('');
-  const [type, setType] = useState('In person');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
+  const [name, setName] = useState("");
+  const [about, setAbout] = useState("");
+  const [type, setType] = useState("In person");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [privateBoolean, setPrivate] = useState(false);
   const [validationErrors, setValidationErrors] = useState([]);
   // const groups = useSelector(state => Object.values(state.groups.allGroups))
-  const userId = useSelector(state => state.session.user.id)
+  const userId = useSelector((state) => state.session.user.id);
 
   // useEffect(()=> {
   //   dispatch(getGroups())
@@ -22,44 +22,41 @@ function CreateGroup() {
 
   useEffect(() => {
     const errors = [];
-    if (!name.length) errors.push('Name Required')
-    if (about.length < 50) errors.push('About must be 50 characters or more')
-    if (!city.length) errors.push('City required')
-    if (!state.length) errors.push('State required')
-    setValidationErrors(errors)
-    }, [name, about, city, state]);
+    if (!name.length) errors.push("Name Required");
+    if (about.length < 50) errors.push("About must be 50 characters or more");
+    if (!city.length) errors.push("City required");
+    if (!state.length) errors.push("State required");
+    setValidationErrors(errors);
+  }, [name, about, city, state]);
 
-    const submitHandler = async (e) => {
-      e.preventDefault();
-      setValidationErrors([]);
-      const body = {
-        name: name,
-        about: about,
-        city: city,
-        state: state,
-        type: type,
-        privateBoolean: privateBoolean }
-      const newGroup = await dispatch(groupCreator(body, userId)).catch(
-        async (res) => {
-          const data = await res.json();
-          if (data && data.errors) setValidationErrors(data.errors)
-        }
-        )
-      if (!validationErrors.length) history.push(`/groups/${newGroup.id}`)
-
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setValidationErrors([]);
+    const body = {
+      name: name,
+      about: about,
+      city: city,
+      state: state,
+      type: type,
+      privateBoolean: privateBoolean,
     };
+    const newGroup = await dispatch(groupCreator(body, userId)).catch(
+      async (res) => {
+        const data = await res.json();
+        if (data && data.errors) setValidationErrors(data.errors);
+      }
+    );
+    if (!validationErrors.length) history.push(`/groups/${newGroup.id}`);
+  };
 
   return (
-    <form
-      className="create-group-form"
-      onSubmit={submitHandler}
-    >
+    <form className="create-group-form" onSubmit={submitHandler}>
       <h2>Create a Group</h2>
       <ul className="errors">
         {validationErrors.length > 0 &&
           validationErrors.map((error) => <li key={error}>{error}</li>)}
       </ul>
-      <label className='create-group-element'>
+      <label className="create-group-element">
         Name:
         <input
           type="text"
@@ -68,7 +65,7 @@ function CreateGroup() {
           value={name}
         />
       </label>
-      <label className='create-group-element'>
+      <label className="create-group-element">
         About:
         <textarea
           name="about"
@@ -76,29 +73,30 @@ function CreateGroup() {
           value={about}
         ></textarea>
       </label>
-      <label className='create-group-element'>Type:
-        <label className='create-group-checkbox'>
+      <label className="create-group-element">
+        Type:
+        <label className="create-group-checkbox">
           <input
-             checked={type === 'Online'}
+            checked={type === "Online"}
             type="radio"
-             value="Online"
-             name="type"
+            value="Online"
+            name="type"
             onChange={(e) => setType(e.target.value)}
-             />
-           Online
+          />
+          Online
         </label>
-        <label className='create-group-checkbox'>
+        <label className="create-group-checkbox">
           <input
-             checked={type === 'In person'}
-             type="radio"
-             value="In person"
-             name="type"
-             onChange={(e) => setType(e.target.value)}
-            />
+            checked={type === "In person"}
+            type="radio"
+            value="In person"
+            name="type"
+            onChange={(e) => setType(e.target.value)}
+          />
           In Person
         </label>
       </label>
-      <label className='create-group-element'>
+      <label className="create-group-element">
         City:
         <input
           type="text"
@@ -107,7 +105,7 @@ function CreateGroup() {
           value={city}
         />
       </label>
-      <label className='create-group-element'>
+      <label className="create-group-element">
         State:
         <input
           type="text"
@@ -116,7 +114,7 @@ function CreateGroup() {
           value={state}
         />
       </label>
-      <label className='create-group-checkbox'>
+      <label className="create-group-checkbox">
         Private:
         <input
           type="checkbox"
@@ -126,14 +124,11 @@ function CreateGroup() {
           value={privateBoolean}
         />
       </label>
-      <button
-        type="submit"
-        disabled={!!validationErrors.length}
-      >
+      <button type="submit" disabled={!!validationErrors.length}>
         Create Group
       </button>
     </form>
-  )
-};
+  );
+}
 
 export default CreateGroup;
