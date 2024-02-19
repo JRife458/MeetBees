@@ -21,6 +21,7 @@
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "start:backend": "npm start --prefix backend",
     "start:frontend": "npm start --prefix frontend",
+    "start": "npm start --prefix backend",
     "tests-dev": "npx playwright test --project=dev-chrome --project=dev-firefox",
     "tests-production": "npx playwright test --project=production-chrome --project=production-firefox",
     "test:dev:all": "start-test start:backend 8000 start:frontend 3000 tests-dev"
